@@ -8,6 +8,7 @@ async function loadChapter(chapterNum) {
   return await res.text();
 }
 
+/* --- Glossary highlighting --- */
 function injectGlossary(text, glossary) {
   for (const term in glossary) {
     const safeTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -45,6 +46,75 @@ function setupTooltips(glossary) {
   });
 }
 
+/* --- Pagination parser --- */
+function parsePages(text) {
+  const pageRegex = /\[startPage=(\d+)\]/g;
+  let match;
+  const pages = [];
+  let lastIndex = 0;
+  let lastPageNum = null;
+
+  while ((match = pageRegex.exec(text)) !== null) {
+    if (lastPageNum !== null) {
+      pages.push({ number: lastPageNum, content: text.slice(lastIndex, match.index).trim() });
+    }
+    lastPageNum = parseInt(match[1]);
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastPageNum !== null) {
+    pages.push({ number: lastPageNum, content: text.slice(lastIndex).trim() });
+  }
+
+  return pages;
+}
+
+/* --- Paragraph wrapper helper --- */
+function formatParagraphs(text) {
+  // Split paragraphs by blank lines
+  return text
+    .split(/\n\s*\n/)
+    .map(p => `<p>${p.trim()}</p>`)
+    .join('\n\n');
+}
+
+/* --- Page renderer --- */
+function renderPage(pages, currentIndex, glossary) {
+  const contentDiv = document.getElementById('chapter-content');
+  const navDiv = document.createElement('div');
+  navDiv.classList.add('page-nav');
+
+  const page = pages[currentIndex];
+  const total = pages.length;
+
+  const processedText = injectGlossary(formatParagraphs(page.content), glossary);
+
+  contentDiv.innerHTML = `
+    <div class="page-label">Page ${page.number}</div>
+    <div class="chapter-text">${processedText}</div>
+  `;
+
+  navDiv.innerHTML = `
+    <button id="prevPage" ${currentIndex === 0 ? 'disabled' : ''}>← Prev</button>
+    <span>Page ${page.number}</span>
+    <button id="nextPage" ${currentIndex === total - 1 ? 'disabled' : ''}>Next →</button>
+  `;
+
+  contentDiv.appendChild(navDiv);
+  setupTooltips(glossary);
+
+  document.getElementById('prevPage')?.addEventListener('click', () => {
+    renderPage(pages, currentIndex - 1, glossary);
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('nextPage')?.addEventListener('click', () => {
+    renderPage(pages, currentIndex + 1, glossary);
+    window.scrollTo(0, 0);
+  });
+}
+
+/* --- Initialize chapter page --- */
 async function initChapter() {
   const params = new URLSearchParams(window.location.search);
   const chapterNum = params.get('chapter');
@@ -56,9 +126,17 @@ async function initChapter() {
     loadChapter(chapterNum)
   ]);
 
-  const processed = injectGlossary(chapterText, glossary);
-  document.getElementById('chapter-content').innerHTML = processed;
-  setupTooltips(glossary);
+  const pages = parsePages(chapterText);
+  if (pages.length === 0) {
+    // no page tags → render full chapter
+    const processedText = injectGlossary(formatParagraphs(chapterText), glossary);
+    document.getElementById('chapter-content').innerHTML =
+      `<div class="chapter-text">${processedText}</div>`;
+    setupTooltips(glossary);
+    return;
+  }
+
+  renderPage(pages, 0, glossary);
 }
 
 if (window.location.pathname.endsWith('chapter.html')) {
