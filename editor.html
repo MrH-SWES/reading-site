@@ -1,37 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Editor – Suqua Portal</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Editor – Suqua Portal</title>
+  <link rel="stylesheet" href="style.css" />
+  </head>
 <body>
-  <main class="editor-container">
-    <h1>Teacher Editor</h1>
-
-    <section class="chapter-editor">
-      <h2>Add New Chapter</h2>
-      <label>Chapter Number: <input id="chapter-number" type="number" min="1"></label>
-      <label>Chapter Title: <input id="chapter-title" type="text"></label>
-      <label>Chapter Text:</label>
-      <textarea id="chapter-text" rows="12" placeholder="[startPage=13] ... [endPage=13]"></textarea>
-      <button id="save-chapter">Add Chapter</button>
-    </section>
-
-    <section class="glossary-editor">
-      <h2>Update Glossary</h2>
-      <label>Paste terms and definitions (word: definition, one per line)</label>
-      <textarea id="glossary-input" rows="8" placeholder="cattail: tall wetland plant used for mats"></textarea>
-      <button id="save-glossary">Update Glossary</button>
-    </section>
-
-    <section class="export-section">
-      <button id="export-site">Export Updated Site (ZIP)</button>
-    </section>
-
-    <p id="status"></p>
+    <main id="content-area" class="editor-container">
+    <p>Loading editor...</p>
   </main>
-  <script src="editor.js"></script>
+  <script src="editor.js"></script>
 </body>
 </html>
