@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
-/* --- Global styles --- */
+/* --- Global layout --- */
 body {
   font-family: 'Lexend', sans-serif;
   background-color: #f9f6f0;         /* warm paper tone */
@@ -16,7 +16,7 @@ body {
   border-radius: 8px;
 }
 
-/* --- Headings --- */
+/* --- Header --- */
 header {
   text-align: center;
   margin-bottom: 2rem;
@@ -34,9 +34,9 @@ h2, h3 {
   margin-top: 2rem;
 }
 
-/* --- Chapter layout --- */
+/* --- Chapter text --- */
 .chapter-text {
-  white-space: pre-wrap;
+  white-space: normal;
   font-size: 1.1rem;
   text-align: justify;
   hyphens: auto;
@@ -106,7 +106,43 @@ a:hover {
   display: none;
 }
 
-/* --- Editor / Teacher UI --- */
+/* --- Page navigation --- */
+.page-label {
+  text-align: center;
+  color: #666;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.page-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.page-nav button {
+  background-color: #e8e2d6;
+  color: #333;
+  border: 1px solid #bfb8a9;
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'Lexend', sans-serif;
+}
+
+.page-nav button:hover {
+  background-color: #dcd5c7;
+}
+
+.page-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Editor (teacher) UI --- */
 .editor-panel {
   background: #fffdf8;
   padding: 1em;
