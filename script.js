@@ -19,65 +19,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Helper Functions (Defined first for clarity) ---
 
-  /**
-   * Escapes special characters in a string for use in a RegExp
-   */
   function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); 
   }
 
-  //
-  // ▼▼▼ THIS IS THE UPDATED FUNCTION ▼▼▼
-  //
   function renderGlossary(text) {
-    // Get all glossary terms and sort them by length, longest first.
-    // This prevents "port" from matching before "port madison reservation".
     const sortedTerms = Object.keys(glossary).sort((a, b) => b.length - a.length);
-    
     let processedText = text;
 
     sortedTerms.forEach(term => {
-      // Create a case-insensitive regex to find the term as a whole word.
       const escapedTerm = escapeRegExp(term);
-      const regex = new RegExp(`\\b(${escapedTerm})\\b`, 'gi'); // g = global, i = case-insensitive
-
-      // Replace the found term with a span, using the original case (the 'match')
-      // but storing the lowercase key (the 'term') for the popup.
+      const regex = new RegExp(`\\b(${escapedTerm})\\b`, 'gi'); 
       processedText = processedText.replace(regex, (match) => {
         return `<span class="glossary-term" data-term="${term}">${match}</span>`;
       });
     });
-
     return processedText;
   }
-  //
-  // ▲▲▲ END OF UPDATED FUNCTION ▲▲▲
-  //
 
   function renderPage() {
     if (pages.length === 0) return;
 
     const page = pages[currentPage];
     pageNumberDisplay.textContent = `Page ${page.number}`;
-    chapterContainer.innerHTML = renderGlossary(page.content); // Uses new function
-    attachGlossaryHandlers(); 
+    chapterContainer.innerHTML = renderGlossary(page.content); 
+    attachGlossaryHandlers(); // This is the updated function
     localStorage.setItem(`page-${chapterFile}`, currentPage);
     prevButton.disabled = currentPage === 0;
     nextButton.disabled = currentPage === pages.length - 1;
   }
 
+  //
+  // ▼▼▼ THIS IS THE UPDATED FUNCTION ▼▼▼
+  //
   function attachGlossaryHandlers() {
     document.querySelectorAll(".glossary-term").forEach((termEl) => {
-      termEl.addEventListener("click", (e) => {
-        e.stopPropagation(); 
-        
+      
+      let tooltip = null; // We'll store the tooltip here
+
+      // Show tooltip on MOUSE HOVER
+      termEl.addEventListener("mouseenter", (e) => {
+        // Remove any other tooltips that might be lingering
         document.querySelectorAll(".tooltip").forEach((t) => t.remove());
 
-        const term = termEl.dataset.term; // This will be the lowercase key
+        const term = termEl.dataset.term;
         const termData = glossary[term];
         if (!termData) return;
 
-        const tooltip = document.createElement("div");
+        // Create the tooltip element
+        tooltip = document.createElement("div");
         tooltip.classList.add("tooltip");
 
         let content = `<p>${termData.definition}</p>`;
@@ -87,24 +77,26 @@ document.addEventListener("DOMContentLoaded", () => {
         tooltip.innerHTML = content;
         document.body.appendChild(tooltip);
 
+        // Position it
         const rect = termEl.getBoundingClientRect();
         tooltip.style.left = `${rect.left + window.scrollX}px`;
         tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
-
-        const closeTooltip = (ev) => {
-          if (tooltip && !tooltip.contains(ev.target)) {
-            tooltip.remove();
-            document.removeEventListener("click", closeTooltip);
-          }
-        };
-
-        setTimeout(() => {
-          document.addEventListener("click", closeTooltip);
-        }, 0);
-        
       });
+
+      // Hide tooltip when MOUSE LEAVES
+      termEl.addEventListener("mouseleave", () => {
+        if (tooltip) {
+          tooltip.remove();
+          tooltip = null;
+        }
+      });
+
     });
   }
+  //
+  // ▲▲▲ END OF UPDATED FUNCTION ▲▲▲
+  //
+
 
   // --- Load all data before rendering ---
   Promise.all([
