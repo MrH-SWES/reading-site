@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevButton = document.getElementById("prev");
   const nextButton = document.getElementById("next");
   const backLink = document.querySelector(".back-link");
-  const chapterTitleEl = document.getElementById("chapter-title"); // Get title element
+  const chapterTitleEl = document.getElementById("chapter-title");
 
   // Only run on chapter.html
   if (!chapterContainer) return;
@@ -16,6 +16,79 @@ document.addEventListener("DOMContentLoaded", () => {
   let glossary = {};
   let pages = [];
   let currentPage = 0;
+
+  // --- Helper Functions (Defined first for clarity) ---
+
+  function renderGlossary(text) {
+    const words = text.split(/\b/);
+    return words
+      .map((word) => {
+        const cleanWord = word.toLowerCase().replace(/[^a-z']/g, "");
+        if (glossary[cleanWord]) {
+          return `<span class="glossary-term" data-term="${cleanWord}">${word}</span>`;
+        }
+        return word;
+      })
+      .join("");
+  }
+
+  function renderPage() {
+    if (pages.length === 0) return;
+
+    const page = pages[currentPage];
+    pageNumberDisplay.textContent = `Page ${page.number}`;
+    chapterContainer.innerHTML = renderGlossary(page.content);
+    attachGlossaryHandlers(); // This is the function we are fixing
+    localStorage.setItem(`page-${chapterFile}`, currentPage);
+    prevButton.disabled = currentPage === 0;
+    nextButton.disabled = currentPage === pages.length - 1;
+  }
+
+  function attachGlossaryHandlers() {
+    document.querySelectorAll(".glossary-term").forEach((termEl) => {
+      termEl.addEventListener("click", (e) => {
+        e.stopPropagation(); // Prevents click from closing parent tooltips if nested
+        
+        // Remove any other tooltips that might be open
+        document.querySelectorAll(".tooltip").forEach((t) => t.remove());
+
+        const term = termEl.dataset.term;
+        const termData = glossary[term];
+        if (!termData) return;
+
+        const tooltip = document.createElement("div");
+        tooltip.classList.add("tooltip");
+
+        let content = `<p>${termData.definition}</p>`;
+        if (termData.image) {
+          content += `<img src="${termData.image}" alt="Image for ${term}" style="width: 100%; max-width: 200px; display: block; margin-top: 8px; border-radius: 4px;">`;
+        }
+        tooltip.innerHTML = content;
+        document.body.appendChild(tooltip);
+
+        const rect = termEl.getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
+
+        // This function handles closing the tooltip
+        const closeTooltip = (ev) => {
+          // Check if the click is *outside* the tooltip
+          if (tooltip && !tooltip.contains(ev.target)) {
+            tooltip.remove();
+            document.removeEventListener("click", closeTooltip);
+          }
+        };
+
+        // **THE FIX:**
+        // Add the 'click-outside' listener *after* the current
+        // click event has finished propagating.
+        setTimeout(() => {
+          document.addEventListener("click", closeTooltip);
+        }, 0);
+        
+      });
+    });
+  }
 
   // --- Load all data before rendering ---
   Promise.all([
@@ -33,10 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- 1. Process Glossary ---
     glossary = glossaryData;
 
-    // --- 2. Process Manifest (This is the new part) ---
+    // --- 2. Process Manifest ---
     const chapterInfo = manifestData.find(ch => ch.file === chapterFile);
     if (chapterInfo && chapterTitleEl) {
-      // Set the H1 text to the chapter's title
       chapterTitleEl.textContent = chapterInfo.title;
     }
 
@@ -59,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
     currentPage = parseInt(localStorage.getItem(`page-${chapterFile}`)) || 0;
     if (currentPage >= pages.length) currentPage = 0;
 
-    // Attach navigation events
     prevButton.addEventListener("click", () => {
       if (currentPage > 0) {
         currentPage--;
@@ -84,67 +155,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chapterTitleEl) chapterTitleEl.textContent = "Error";
     console.error(err);
   });
-
-
-  // --- Helper Functions ---
-
-  function renderGlossary(text) {
-    const words = text.split(/\b/);
-    return words
-      .map((word) => {
-        const cleanWord = word.toLowerCase().replace(/[^a-z']/g, "");
-        if (glossary[cleanWord]) {
-          return `<span class="glossary-term" data-term="${cleanWord}">${word}</span>`;
-        }
-        return word;
-      })
-      .join("");
-  }
-
-  function renderPage() {
-    if (pages.length === 0) return; // Don't render if pages failed to parse
-
-    const page = pages[currentPage];
-    pageNumberDisplay.textContent = `Page ${page.number}`;
-    chapterContainer.innerHTML = renderGlossary(page.content);
-    attachGlossaryHandlers();
-    localStorage.setItem(`page-${chapterFile}`, currentPage);
-    prevButton.disabled = currentPage === 0;
-    nextButton.disabled = currentPage === pages.length - 1;
-  }
-
-  function attachGlossaryHandlers() {
-    document.querySelectorAll(".glossary-term").forEach((termEl) => {
-      termEl.addEventListener("click", (e) => {
-        e.stopPropagation();
-        document.querySelectorAll(".tooltip").forEach((t) => t.remove());
-
-        const term = termEl.dataset.term;
-        const termData = glossary[term];
-        if (!termData) return;
-
-        const tooltip = document.createElement("div");
-        tooltip.classList.add("tooltip");
-
-        let content = `<p>${termData.definition}</p>`;
-        if (termData.image) {
-          content += `<img src="${termData.image}" alt="Image for ${term}" style="width: 100%; max-width: 200px; display: block; margin-top: 8px; border-radius: 4px;">`;
-        }
-        tooltip.innerHTML = content;
-        document.body.appendChild(tooltip);
-
-        const rect = termEl.getBoundingClientRect();
-        tooltip.style.left = `${rect.left + window.scrollX}px`;
-        tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
-
-        const closeTooltip = (ev) => {
-          if (!tooltip.contains(ev.target)) {
-            tooltip.remove();
-            document.removeEventListener("click", closeTooltip);
-          }
-        };
-        document.addEventListener("click", closeTooltip);
-      });
-    });
-  }
 });
