@@ -1,1 +1,5 @@
 
+[
+  { "number": 1, "title": "Suqua", "file": "chapter1.txt" },
+  { "number": 2, "title": "Chapter 2", "file": "chapter2.txt" }
+]
