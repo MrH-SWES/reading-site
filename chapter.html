@@ -1,32 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chapter</title>
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main>
+  <div class="chapter-container">
     <a href="index.html" class="back-link">← Back to Chapters</a>
-    <h1 id="chapter-title"></h1>
-    <h2 id="page-number-display"></h2>
+    <h1 id="chapter-title">Chapter Title</h1>
+    <p id="page-number" class="page-number"></p>
+    <div id="chapter-content" class="chapter-content"></div>
 
-    <div id="chapter-content" class="chapter-text"></div>
-
-    <div class="page-nav">
-      <button id="prevPage">← Prev</button>
-      <span id="page-counter" class="page-label"></span>
-      <button id="nextPage">Next →</button>
+    <div class="nav-buttons">
+      <button id="prev-page" class="nav-button">← Prev</button>
+      <button id="next-page" class="nav-button">Next →</button>
     </div>
+  </div>
 
-    <div id="tooltip" class="tooltip hidden"><div id="tooltip-content"></div></div>
-
-    <footer class="page-footer">
-      <span id="left-page-num"></span>
-      <span id="right-page-num"></span>
-    </footer>
-  </main>
   <script src="script.js"></script>
 </body>
 </html>
