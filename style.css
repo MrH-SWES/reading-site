@@ -1,15 +1,97 @@
-/* General reset */
+/* ===========================
+   GLOBAL STYLES
+   =========================== */
 body {
   font-family: 'Georgia', serif;
   background-color: #f8f4ee;
   margin: 0;
   padding: 0;
+  color: #2e2e2e;
   display: flex;
   justify-content: center;
-  color: #2e2e2e;
 }
 
-/* Chapter Container */
+/* Smooth fade between pages */
+* {
+  transition: all 0.3s ease;
+}
+
+/* ===========================
+   INDEX PAGE STYLES
+   =========================== */
+.index-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f4ee;
+  padding: 2rem;
+}
+
+.book-card {
+  background: #fffdf8;
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
+  text-align: center;
+}
+
+/* Balanced half-page cover */
+.book-cover {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 10px;
+  margin: 0 auto 1.5rem auto;
+  display: block;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+}
+
+.book-title {
+  font-family: 'Georgia', serif;
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+}
+
+.book-author {
+  font-style: italic;
+  font-size: 1.1rem;
+  color: #6b6b6b;
+  margin-bottom: 1rem;
+}
+
+.book-description {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  color: #444;
+}
+
+/* Chapter links */
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chapter-list a {
+  text-decoration: none;
+  color: #3d5a80;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  background-color: #f0ebe1;
+  transition: all 0.2s ease;
+}
+
+.chapter-list a:hover {
+  background-color: #e2d7c3;
+  color: #1e3d5a;
+}
+
+/* ===========================
+   CHAPTER PAGE STYLES
+   =========================== */
 .chapter-container {
   background: #fffdf8;
   margin: 3rem;
@@ -20,7 +102,6 @@ body {
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Back link */
 .back-link {
   display: inline-block;
   margin-bottom: 1rem;
@@ -33,14 +114,14 @@ body {
   text-decoration: underline;
 }
 
-/* Chapter Title */
+/* Chapter title */
 h1 {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
-/* Page Number */
+/* Page number display */
 .page-number {
   text-align: center;
   font-style: italic;
@@ -48,14 +129,15 @@ h1 {
   margin-bottom: 2rem;
 }
 
-/* Text content */
+/* Text block formatting */
 .chapter-content {
   line-height: 1.8;
   text-align: justify;
   white-space: pre-wrap;
+  font-size: 1.05rem;
 }
 
-/* Navigation buttons */
+/* Pagination buttons */
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -77,4 +159,22 @@ h1 {
 
 .nav-button:hover {
   background-color: #d3c2a8;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+@media (max-width: 768px) {
+  .chapter-container {
+    margin: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .book-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .book-cover {
+    max-width: 240px;
+  }
 }
