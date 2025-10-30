@@ -177,4 +177,26 @@ h1 {
   .book-cover {
     max-width: 240px;
   }
+   .glossary-term {
+     color: #2a5d8f;
+     font-weight: 500;
+     cursor: pointer;
+     position: relative;
+   }
+
+   .tooltip {
+     position: absolute;
+     background: #fffbe8;
+     border: 1px solid #cbb77c;
+     border-radius: 8px;
+     padding: 10px 14px;
+     font-size: 0.95rem;
+     color: #333;
+     line-height: 1.4;
+     max-width: 260px;
+     z-index: 10;
+     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+   }
+
 }
+
