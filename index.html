@@ -8,26 +8,27 @@
 </head>
 <body>
   <main class="index-container">
-    <div class="book-header">
-      <img 
-        src="assets/suqua-cover.jpg"
-        alt="Suqua Book Cover"
-        class="book-cover"
-      >
-      <div class="book-meta">
-        <h1 class="book-title">Suqua</h1>
-        <p class="book-author">by Diane Johnston Hamm</p>
-        <p class="book-subtitle">Reading Portal</p>
-      </div>
-    </div>
+    <div>
+      <div class="book-header">
+        <img 
+          src="assets/suqua-cover.jpg"
+          alt="Suqua Book Cover"
+          class="book-cover"
+        >
+        <div class="book-meta">
+          <h1 class="book-title">Suqua</h1>
+          <p class="book-author">by Diane Johnston Hamm</p>
+          <p class="book-subtitle">Reading Portal</p>
+        </div>
+      </div>
 
-    <div class="chapter-list" id="chapter-list">
-      <p>Loading chapters...</p>
-    </div>
+      <div class="chapter-list" id="chapter-list">
+        <p>Loading chapters...</p>
+      </div>
+    </div>
   </main>
 
   <script>
-    // This inline script is the ONLY one that should be on this page.
     fetch("chapters/manifest.json")
       .then(res => {
         if (!res.ok) throw new Error("Failed to load manifest");
@@ -49,6 +50,5 @@
           `<p class="error">Error loading chapters: ${err.message}</p>`;
       });
   </script>
-
-  </body>
+</body>
 </html>
