@@ -1,59 +1,72 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
-/* --- Global layout --- */
-body {
-  font-family: 'Lexend', sans-serif;
-  background-color: #f9f6f0;         /* warm paper tone */
-  color: #2c2a26;                    /* soft ink black */
-  line-height: 1.8;
+/* --- Page background --- */
+html, body {
+  height: 100%;
   margin: 0;
-  padding: 2rem;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  box-shadow: 0 0 40px rgba(0,0,0,0.1);
-  border: 1px solid #e0dccf;
-  border-radius: 8px;
+  background: #f5efe6; /* warmer parchment tone */
 }
 
-/* --- Header --- */
-header {
+body {
+  font-family: 'Lexend', sans-serif;
+  color: #2c2a26;
+  line-height: 1.8;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 3rem 1rem;
+}
+
+/* --- Book container --- */
+main {
+  background: #fdfaf6;
+  max-width: 680px;
+  min-height: 85vh;
+  padding: 3rem 3rem 5rem 3rem;
+  border-radius: 12px;
+  position: relative;
+  box-shadow:
+    inset 20px 0 25px -25px rgba(0,0,0,0.25),
+    inset -20px 0 25px -25px rgba(0,0,0,0.25),
+    0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* --- Headings --- */
+h1, h2, h3 {
   text-align: center;
-  margin-bottom: 2rem;
+  font-weight: 500;
+  margin: 0.5em 0;
 }
 
 h1 {
-  font-size: 2.2rem;
+  font-size: 2.1rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
 }
 
-h2, h3 {
-  text-align: center;
-  font-weight: 500;
-  margin-top: 2rem;
+h2 {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #7b705b;
 }
 
 /* --- Chapter text --- */
 .chapter-text {
-  white-space: normal;
-  font-size: 1.1rem;
+  font-size: 1.12rem;
   text-align: justify;
   hyphens: auto;
-  padding-bottom: 4rem;
 }
 
-/* Drop cap for first paragraph */
+/* Drop cap */
 .chapter-text p:first-of-type::first-letter {
   float: left;
   font-size: 3.4rem;
   line-height: 0.9;
-  margin-right: 0.15em;
-  margin-top: 0.15em;
+  margin-right: 0.18em;
+  margin-top: 0.18em;
   color: #2c2a26;
 }
 
-/* Paragraph formatting */
+/* Paragraphs */
 .chapter-text p {
   text-indent: 1.5em;
   margin: 0 0 1rem 0;
@@ -66,9 +79,7 @@ a {
   font-weight: 500;
 }
 
-a:hover {
-  text-decoration: underline;
-}
+a:hover { text-decoration: underline; }
 
 .back-link {
   display: inline-block;
@@ -76,7 +87,7 @@ a:hover {
   font-size: 1rem;
 }
 
-/* --- Glossary tooltip --- */
+/* --- Glossary --- */
 .gloss {
   position: relative;
   color: #173e6b;
@@ -102,11 +113,9 @@ a:hover {
   margin-top: 8px;
 }
 
-.hidden {
-  display: none;
-}
+.hidden { display: none; }
 
-/* --- Page navigation --- */
+/* --- Pagination --- */
 .page-label {
   text-align: center;
   color: #666;
@@ -142,55 +151,24 @@ a:hover {
   cursor: not-allowed;
 }
 
-/* --- Editor (teacher) UI --- */
-.editor-panel {
-  background: #fffdf8;
-  padding: 1em;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  margin-bottom: 20px;
-  border: 1px solid #e4dfd1;
+/* --- Page number footer --- */
+footer.page-footer {
+  position: absolute;
+  bottom: 1.4rem;
+  width: calc(100% - 6rem);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #8c8371;
+  font-style: italic;
 }
 
-.editor-panel h2 {
-  color: #173e6b;
-  margin-top: 0;
-}
-
-input[type=text], textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 6px 0 12px;
-  border: 1px solid #cfc8b8;
-  border-radius: 6px;
-  font-size: 1em;
-  background-color: #fdfbf7;
-}
-
-button {
-  background-color: #4b5d8c;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  font-size: 1em;
-  cursor: pointer;
-  margin: 6px 8px 0 0;
-}
-
-button:hover {
-  background-color: #394d77;
-}
-
-/* --- Responsive adjustments --- */
-@media (max-width: 600px) {
-  body {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-  h1 {
-    font-size: 1.8rem;
+/* --- Responsive tweaks --- */
+@media (max-width: 650px) {
+  main {
+    padding: 2rem 1.2rem 4rem 1.2rem;
+    box-shadow: none;
+    border-radius: 0;
   }
 
   .chapter-text {
