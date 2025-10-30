@@ -3,23 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Portal</title>
+  <title>Reading Portal – Suqua</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <main class="index-container">
-    <div class="index-header">
-      <h1>Reading Portal</h1>
-      <p>Select a chapter to begin reading.</p>
+    <div class="book-header">
+      <img 
+        src="assets/suqua-cover.jpg"
+        alt="Suqua Book Cover"
+        class="book-cover"
+      >
+      <div class="book-meta">
+        <h1 class="book-title">Suqua</h1>
+        <p class="book-author">by Diane Johnston Hamm</p>
+        <p class="book-subtitle">Reading Portal</p>
+      </div>
     </div>
+
+    <p class="index-instructions">Select a chapter to begin reading:</p>
+
     <div class="chapter-list" id="chapter-list"></div>
   </main>
+
   <script>
-    // Dynamically load chapter links
     const chapters = [
       { number: 1, title: "Suqua" },
       { number: 2, title: "Chapter 2" }
-      // Add more here
+      // Add more as needed
     ];
 
     const list = document.getElementById('chapter-list');
