@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Chapter</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <main>
     <a href="index.html" class="back-link">← Back to Chapters</a>
     <h1 id="chapter-title"></h1>
     <h2 id="page-number-display"></h2>
+
     <div id="chapter-content" class="chapter-text"></div>
 
     <div class="page-nav">
@@ -19,11 +20,13 @@
       <button id="nextPage">Next →</button>
     </div>
 
+    <div id="tooltip" class="tooltip hidden"><div id="tooltip-content"></div></div>
+
     <footer class="page-footer">
       <span id="left-page-num"></span>
       <span id="right-page-num"></span>
     </footer>
   </main>
-  <script src="chapter.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
