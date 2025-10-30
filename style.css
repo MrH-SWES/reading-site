@@ -1,82 +1,123 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&family=Atkinson+Hyperlegible&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
 
+/* --- Global styles --- */
 body {
-  font-family: 'Atkinson Hyperlegible', 'Lexend', sans-serif;
-  background-color: #f5f8fb;
-  color: #222;
-  line-height: 1.7;
+  font-family: 'Lexend', sans-serif;
+  background-color: #f9f6f0;         /* warm paper tone */
+  color: #2c2a26;                    /* soft ink black */
+  line-height: 1.8;
   margin: 0;
-  padding: 20px;
-  max-width: 900px;
+  padding: 2rem;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  box-shadow: 0 0 40px rgba(0,0,0,0.1);
+  border: 1px solid #e0dccf;
+  border-radius: 8px;
 }
 
+/* --- Headings --- */
 header {
-  margin-bottom: 1em;
   text-align: center;
+  margin-bottom: 2rem;
 }
 
-a {
-  color: #005fa3;
-  text-decoration: none;
-  display: block;
-  margin: 0.5em 0;
-  font-size: 1.2em;
+h1 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-a:hover { text-decoration: underline; }
+h2, h3 {
+  text-align: center;
+  font-weight: 500;
+  margin-top: 2rem;
+}
 
+/* --- Chapter layout --- */
 .chapter-text {
   white-space: pre-wrap;
-  font-size: 1.1em;
+  font-size: 1.1rem;
+  text-align: justify;
+  hyphens: auto;
+  padding-bottom: 4rem;
 }
 
+/* Drop cap for first paragraph */
+.chapter-text p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.4rem;
+  line-height: 0.9;
+  margin-right: 0.15em;
+  margin-top: 0.15em;
+  color: #2c2a26;
+}
+
+/* Paragraph formatting */
+.chapter-text p {
+  text-indent: 1.5em;
+  margin: 0 0 1rem 0;
+}
+
+/* --- Links --- */
+a {
+  color: #4b5d8c;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* --- Glossary tooltip --- */
 .gloss {
   position: relative;
-  color: #003366;
-  background-color: #eaf3ff;
-  border-bottom: 1px dotted #005fa3;
+  color: #173e6b;
+  background-color: #f0f6ff;
+  border-bottom: 1px dotted #173e6b;
   cursor: pointer;
 }
 
 .tooltip {
   position: fixed;
-  background: white;
-  border: 1px solid #ccc;
+  background: #fffdf8;
+  border: 1px solid #ccc6b3;
   padding: 12px;
   border-radius: 8px;
-  max-width: 250px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  max-width: 260px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   z-index: 1000;
 }
 
 .tooltip img {
   max-width: 100%;
   border-radius: 6px;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
-.hidden { display: none; }
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 10px;
-  color: #333;
-  text-decoration: none;
+.hidden {
+  display: none;
 }
 
-/* --- Teacher UI --- */
+/* --- Editor / Teacher UI --- */
 .editor-panel {
-  background: white;
+  background: #fffdf8;
   padding: 1em;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin-bottom: 20px;
+  border: 1px solid #e4dfd1;
 }
 
 .editor-panel h2 {
-  color: #003366;
+  color: #173e6b;
   margin-top: 0;
 }
 
@@ -84,22 +125,39 @@ input[type=text], textarea {
   width: 100%;
   padding: 8px;
   margin: 6px 0 12px;
-  border: 1px solid #ccc;
+  border: 1px solid #cfc8b8;
   border-radius: 6px;
   font-size: 1em;
+  background-color: #fdfbf7;
 }
 
 button {
-  background-color: #005fa3;
+  background-color: #4b5d8c;
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 10px 18px;
   border-radius: 6px;
   font-size: 1em;
   cursor: pointer;
-  margin-right: 8px;
+  margin: 6px 8px 0 0;
 }
 
 button:hover {
-  background-color: #004a82;
+  background-color: #394d77;
+}
+
+/* --- Responsive adjustments --- */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+    font-size: 1rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .chapter-text {
+    font-size: 1rem;
+  }
 }
