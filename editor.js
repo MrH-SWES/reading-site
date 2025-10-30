@@ -45,37 +45,55 @@ function setupEditor() {
   document.getElementById('generate-files').onclick = async () => {
     output.innerHTML = "";
 
-    // parse glossary
+    // Parse glossary
     const glossaryObj = {};
-    glossaryText.value.split("\n").map(l => l.trim()).filter(Boolean).forEach(line => {
-      const [term, ...rest] = line.split(":");
-      if (term && rest.length) glossaryObj[term.trim()] = { definition: rest.join(":").trim() };
-    });
+    glossaryText.value
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean)
+      .forEach(line => {
+        const [term, ...rest] = line.split(":");
+        if (term && rest.length)
+          glossaryObj[term.trim().toLowerCase()] = rest.join(":").trim();
+      });
 
-    glossaryImages.value.split("\n").map(l => l.trim()).filter(Boolean).forEach(line => {
-      const [term, ...rest] = line.split(":");
-      if (term && rest.length && glossaryObj[term.trim()]) {
-        glossaryObj[term.trim()].image = rest.join(":").trim();
-      }
-    });
+    // Parse glossary images (optional)
+    glossaryImages.value
+      .split("\n")
+      .map(l => l.trim())
+      .filter(Boolean)
+      .forEach(line => {
+        const [term, ...rest] = line.split(":");
+        const imageUrl = rest.join(":").trim();
+        const t = term.trim().toLowerCase();
+        if (term && imageUrl && glossaryObj[t]) {
+          glossaryObj[t] = { definition: glossaryObj[t], image: imageUrl };
+        }
+      });
 
-    // output glossary.json
+    // Output glossary.json
     const glossaryData = JSON.stringify(glossaryObj, null, 2);
     outputFile("glossary.json", glossaryData, output);
 
-    // chapters
+    // Build manifest for chapters
+    const manifest = [];
+
     chapters.forEach((div, i) => {
       const [titleInput, textArea] = div.querySelectorAll("input, textarea");
+      const title = titleInput.value.trim() || `Chapter ${i + 1}`;
       const filename = `chapter${i + 1}.txt`;
-      outputFile(filename, textArea.value, output);
+
+      manifest.push({ file: filename, title });
+      outputFile(`chapters/${filename}`, textArea.value.trim(), output);
     });
 
-    // build index.html dynamically
-    const links = chapters.map((div, i) => {
-      const [titleInput] = div.querySelectorAll("input");
-      const title = titleInput.value.trim() || `Chapter ${i + 1}`;
-      return `<a href="chapter.html?chapter=${i + 1}">${title}</a>`;
-    }).join("\n  ");
+    const manifestData = JSON.stringify(manifest, null, 2);
+    outputFile("chapters/manifest.json", manifestData, output);
+
+    // Build index.html dynamically
+    const links = manifest
+      .map((c, i) => `<a href="chapter.html?chapter=${c.file}">Chapter ${i + 1}: ${c.title}</a>`)
+      .join("\n  ");
 
     const indexTemplate = `
 <!DOCTYPE html>
@@ -87,19 +105,25 @@ function setupEditor() {
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>Reading Portal</h1>
-  <p>Select a chapter to begin reading.</p>
-</header>
-<main id="content-area">
-  ${links}
+<main class="index-container">
+  <div class="book-card">
+    <img src="assets/suqua-cover.jpg" alt="Book cover" class="book-cover">
+    <h1 class="book-title">Daughter of Suqua</h1>
+    <p class="book-author">by Diane Johnston Hamm</p>
+    <p class="book-subtitle">Reading Portal</p>
+    <div class="chapter-list">
+      ${links}
+    </div>
+  </div>
 </main>
 </body>
 </html>`;
+
     outputFile("index.html", indexTemplate.trim(), output);
   };
 }
 
+// Create downloadable/copyable file panels
 function outputFile(filename, content, container) {
   const div = document.createElement("div");
   div.classList.add("editor-panel");
