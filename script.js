@@ -47,23 +47,38 @@ function setupTooltips(glossary) {
 }
 
 /* --- Pagination parser --- */
-function parsePages(text) {
-  const pageRegex = /\[startPage=(\d+)\]/g;
-  let match;
-  const pages = [];
-  let lastIndex = 0;
-  let lastPageNum = null;
+function parsePages(rawText) {
+  // Normalize spacing between tags (in case [end][start] touch)
+  let text = rawText.replace(/\]\[/g, "]\n["); 
 
-  while ((match = pageRegex.exec(text)) !== null) {
+  const startTagRegex = /\[startPage=(\d+)\]/g;
+  const endTagRegex = /\[endPage=(\d+)\]/g;
+
+  const pages = [];
+  let match;
+  let lastPageNum = null;
+  let lastIndex = 0;
+
+  // Find all [startPage] and [endPage] pairs
+  while ((match = startTagRegex.exec(text)) !== null) {
     if (lastPageNum !== null) {
-      pages.push({ number: lastPageNum, content: text.slice(lastIndex, match.index).trim() });
+      const segment = text.slice(lastIndex, match.index).trim();
+      if (segment.length > 0) {
+        pages.push({ number: lastPageNum, content: segment });
+      }
     }
     lastPageNum = parseInt(match[1]);
     lastIndex = match.index + match[0].length;
   }
 
-  if (lastPageNum !== null) {
-    pages.push({ number: lastPageNum, content: text.slice(lastIndex).trim() });
+  // Handle trailing page
+  if (lastPageNum !== null && lastIndex < text.length) {
+    const remaining = text.slice(lastIndex).trim();
+    if (remaining.length > 0) {
+      // Cut off trailing endPage if present
+      const clean = remaining.replace(endTagRegex, '').trim();
+      pages.push({ number: lastPageNum, content: clean });
+    }
   }
 
   return pages;
@@ -96,7 +111,7 @@ function renderPage(pages, currentIndex, glossary) {
 
   navDiv.innerHTML = `
     <button id="prevPage" ${currentIndex === 0 ? 'disabled' : ''}>← Prev</button>
-    <span>Page ${page.number}</span>
+    <span>Page ${page.number} of ${pages[pages.length - 1].number}</span>
     <button id="nextPage" ${currentIndex === total - 1 ? 'disabled' : ''}>Next →</button>
   `;
 
