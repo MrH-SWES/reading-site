@@ -19,26 +19,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Helper Functions (Defined first for clarity) ---
 
-  function renderGlossary(text) {
-    const words = text.split(/\b/);
-    return words
-      .map((word) => {
-        const cleanWord = word.toLowerCase().replace(/[^a-z']/g, "");
-        if (glossary[cleanWord]) {
-          return `<span class="glossary-term" data-term="${cleanWord}">${word}</span>`;
-        }
-        return word;
-      })
-      .join("");
+  /**
+   * Escapes special characters in a string for use in a RegExp
+   */
+  function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
   }
+
+  //
+  // ▼▼▼ THIS IS THE UPDATED FUNCTION ▼▼▼
+  //
+  function renderGlossary(text) {
+    // Get all glossary terms and sort them by length, longest first.
+    // This prevents "port" from matching before "port madison reservation".
+    const sortedTerms = Object.keys(glossary).sort((a, b) => b.length - a.length);
+    
+    let processedText = text;
+
+    sortedTerms.forEach(term => {
+      // Create a case-insensitive regex to find the term as a whole word.
+      const escapedTerm = escapeRegExp(term);
+      const regex = new RegExp(`\\b(${escapedTerm})\\b`, 'gi'); // g = global, i = case-insensitive
+
+      // Replace the found term with a span, using the original case (the 'match')
+      // but storing the lowercase key (the 'term') for the popup.
+      processedText = processedText.replace(regex, (match) => {
+        return `<span class="glossary-term" data-term="${term}">${match}</span>`;
+      });
+    });
+
+    return processedText;
+  }
+  //
+  // ▲▲▲ END OF UPDATED FUNCTION ▲▲▲
+  //
 
   function renderPage() {
     if (pages.length === 0) return;
 
     const page = pages[currentPage];
     pageNumberDisplay.textContent = `Page ${page.number}`;
-    chapterContainer.innerHTML = renderGlossary(page.content);
-    attachGlossaryHandlers(); // This is the function we are fixing
+    chapterContainer.innerHTML = renderGlossary(page.content); // Uses new function
+    attachGlossaryHandlers(); 
     localStorage.setItem(`page-${chapterFile}`, currentPage);
     prevButton.disabled = currentPage === 0;
     nextButton.disabled = currentPage === pages.length - 1;
@@ -47,12 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function attachGlossaryHandlers() {
     document.querySelectorAll(".glossary-term").forEach((termEl) => {
       termEl.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevents click from closing parent tooltips if nested
+        e.stopPropagation(); 
         
-        // Remove any other tooltips that might be open
         document.querySelectorAll(".tooltip").forEach((t) => t.remove());
 
-        const term = termEl.dataset.term;
+        const term = termEl.dataset.term; // This will be the lowercase key
         const termData = glossary[term];
         if (!termData) return;
 
@@ -70,18 +91,13 @@ document.addEventListener("DOMContentLoaded", () => {
         tooltip.style.left = `${rect.left + window.scrollX}px`;
         tooltip.style.top = `${rect.bottom + window.scrollY + 5}px`;
 
-        // This function handles closing the tooltip
         const closeTooltip = (ev) => {
-          // Check if the click is *outside* the tooltip
           if (tooltip && !tooltip.contains(ev.target)) {
             tooltip.remove();
             document.removeEventListener("click", closeTooltip);
           }
         };
 
-        // **THE FIX:**
-        // Add the 'click-outside' listener *after* the current
-        // click event has finished propagating.
         setTimeout(() => {
           document.addEventListener("click", closeTooltip);
         }, 0);
@@ -92,27 +108,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Load all data before rendering ---
   Promise.all([
-    // 1. Load Glossary
     fetch("glossary.json").then((res) => (res.ok ? res.json() : {})),
-    // 2. Load Manifest
     fetch("chapters/manifest.json").then((res) => (res.ok ? res.json() : [])),
-    // 3. Load Chapter Text
     fetch(`chapters/${chapterFile}`).then((res) => {
       if (!res.ok) throw new Error(`Failed to load chapter file: ${chapterFile}`);
       return res.text();
     }),
   ])
   .then(([glossaryData, manifestData, chapterText]) => {
-    // --- 1. Process Glossary ---
+    // 1. Process Glossary
     glossary = glossaryData;
 
-    // --- 2. Process Manifest ---
+    // 2. Process Manifest
     const chapterInfo = manifestData.find(ch => ch.file === chapterFile);
     if (chapterInfo && chapterTitleEl) {
       chapterTitleEl.textContent = chapterInfo.title;
     }
 
-    // --- 3. Process Chapter Text ---
+    // 3. Process Chapter Text
     const pageRegex = /\[startPage=(\d+)\]([\s\S]*?)\[endPage=\1\]/g;
     let match;
     while ((match = pageRegex.exec(chapterText)) !== null) {
@@ -127,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // --- 4. Setup Page and Navigation ---
+    // 4. Setup Page and Navigation
     currentPage = parseInt(localStorage.getItem(`page-${chapterFile}`)) || 0;
     if (currentPage >= pages.length) currentPage = 0;
 
@@ -150,7 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   })
   .catch((err) => {
-    // Handle errors from any of the fetches
     chapterContainer.innerHTML = `<p class="error">Error loading page: ${err.message}</p>`;
     if (chapterTitleEl) chapterTitleEl.textContent = "Error";
     console.error(err);
