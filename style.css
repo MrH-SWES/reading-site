@@ -28,51 +28,64 @@ body {
   padding: 2rem;
 }
 
-.book-card {
-  background: #fffdf8;
-  padding: 2.5rem 3rem;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  max-width: 480px;
-  text-align: center;
+.book-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  background: #fffdf8;
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
 }
 
 .book-cover {
-  width: 100%;
-  max-width: 320px;
+  width: 120px; /* Smaller cover for the list page */
   height: auto;
-  border-radius: 10px;
-  margin: 0 auto 1.5rem auto;
-  display: block;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.book-meta {
+  text-align: left;
 }
 
 .book-title {
   font-family: 'Georgia', serif;
   font-size: 2rem;
-  margin-bottom: 0.2rem;
+  margin: 0 0 0.2rem 0;
 }
 
 .book-author {
   font-style: italic;
   font-size: 1.1rem;
   color: #6b6b6b;
-  margin-bottom: 1rem;
+  margin: 0 0 0.5rem 0;
 }
 
-.book-description {
-  font-size: 1rem;
-  margin-bottom: 1.5rem;
-  color: #444;
+.book-subtitle {
+  font-size: 1rem;
+  color: #444;
+  margin: 0;
 }
 
+/* Chapter links */
 .chapter-list {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  background: #fffdf8;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  max-width: 480px;
+  width: 100%;
+  box-sizing: border-box; /* Ensures padding doesn't break width */
 }
 
-.chapter-list a {
+.chapter-link {
   text-decoration: none;
   color: #3d5a80;
   font-weight: 500;
@@ -82,7 +95,7 @@ body {
   transition: all 0.2s ease;
 }
 
-.chapter-list a:hover {
+.chapter-link:hover {
   background-color: #e2d7c3;
   color: #1e3d5a;
 }
@@ -156,22 +169,20 @@ h1 {
 }
 
 /* ===========================
-   GLOSSARY STYLES (MOVED)
+   GLOSSARY STYLES
    =========================== */
 .glossary-term {
-  color: #2e2e2e; /* Reset to default text color */
-  font-weight: 500;
-  cursor: help; /* Change cursor from pointer to help */
+  color: #2e2e2e;
+  font-weight: 500;
+  cursor: help;
   position: relative;
-  
-  /* --- ADDED THIS FOR THE SUBTLE HIGHLIGHT --- */
-  background-color: #f7f3e8; 
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
+  background-color: #f7f3e8; /* Subtle highlight */
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
 }
 
 .glossary-term:hover {
-  background-color: #f0e9d6; /* Darken highlight on hover */
+  background-color: #f0e9d6; /* Darken highlight on hover */
 }
 
 .tooltip {
@@ -186,11 +197,10 @@ h1 {
   max-width: 260px;
   z-index: 10;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  
-  /* Remove paragraph margin inside tooltip */
-  p {
-    margin: 0;
-  }
+}
+
+.tooltip p {
+  margin: 0;
 }
 
 /* ===========================
@@ -202,16 +212,17 @@ h1 {
     padding: 1.5rem;
   }
 
-  .book-card {
-    padding: 2rem 1.5rem;
-  }
+  .book-header {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+  }
 
-  .book-cover {
-    max-width: 240px;
-  }
+  .book-meta {
+    text-align: center;
+  }
   
-  /* The .glossary-term and .tooltip styles
-    were here, but have been moved
-    outside to apply to all screen sizes.
-  */
+  .chapter-list {
+    padding: 1rem 1.5rem;
+  }
 }
