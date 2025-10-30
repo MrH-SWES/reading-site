@@ -3,7 +3,7 @@
 html, body {
   height: 100%;
   margin: 0;
-  background: #f5efe6; /* parchment */
+  background: #f5efe6;
 }
 
 body {
@@ -16,11 +16,12 @@ body {
   padding: 3rem 1rem;
 }
 
+/* --- Book container --- */
 main {
   background: #fdfaf6;
-  max-width: 650px;          /* controls measure ≈ 10–12 words/line */
+  max-width: 850px; /* comfortable width for reading */
   min-height: 85vh;
-  padding: 3rem 3rem 5rem 3rem;
+  padding: 3rem 4rem 5rem 4rem;
   border-radius: 12px;
   position: relative;
   box-shadow:
@@ -29,32 +30,31 @@ main {
     0 8px 20px rgba(0,0,0,0.1);
 }
 
+/* --- Headings --- */
 h1, h2 {
   text-align: center;
   font-weight: 500;
   margin: 0.5em 0;
 }
 
-h1 { font-size: 2.1rem; font-weight: 600; }
-h2 { font-size: 1.1rem; font-style: italic; color: #7b705b; }
-
-/* Reader text */
-.chapter-text {
-  font-size: 1.12rem;
-  text-align: justify;
-  hyphens: auto;
-  max-width: 50ch;      /* enforce ~10–12 words/line regardless of screen */
-  margin: 0 auto;
+h1 {
+  font-size: 2.1rem;
+  font-weight: 600;
 }
 
-/* Drop cap ONLY when .dropcap is present (first page) */
-.chapter-text.dropcap p:first-of-type::first-letter {
-  float: left;
-  font-size: 3.4rem;
-  line-height: 0.9;
-  margin-right: 0.18em;
-  margin-top: 0.18em;
-  color: #2c2a26;
+h2 {
+  font-size: 1.1rem;
+  font-style: italic;
+  color: #7b705b;
+}
+
+/* --- Chapter text --- */
+.chapter-text {
+  font-size: 1.15rem;
+  text-align: justify;
+  hyphens: auto;
+  max-width: 65ch; /* roughly 13–15 words per line */
+  margin: 0 auto;
 }
 
 .chapter-text p {
@@ -62,12 +62,22 @@ h2 { font-size: 1.1rem; font-style: italic; color: #7b705b; }
   margin: 0 0 1rem 0;
 }
 
-/* Links */
-a { color: #4b5d8c; text-decoration: none; font-weight: 500; }
-a:hover { text-decoration: underline; }
-.back-link { display: inline-block; margin-bottom: 1.5rem; font-size: 1rem; }
+/* --- Links --- */
+a {
+  color: #4b5d8c;
+  text-decoration: none;
+  font-weight: 500;
+}
 
-/* Glossary */
+a:hover { text-decoration: underline; }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+/* --- Glossary --- */
 .gloss {
   position: relative;
   color: #173e6b;
@@ -75,6 +85,7 @@ a:hover { text-decoration: underline; }
   border-bottom: 1px dotted #173e6b;
   cursor: pointer;
 }
+
 .tooltip {
   position: fixed;
   background: #fffdf8;
@@ -85,10 +96,16 @@ a:hover { text-decoration: underline; }
   box-shadow: 0 4px 10px rgba(0,0,0,0.15);
   z-index: 1000;
 }
-.tooltip img { max-width: 100%; border-radius: 6px; margin-top: 8px; }
+
+.tooltip img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin-top: 8px;
+}
+
 .hidden { display: none; }
 
-/* Pagination */
+/* --- Pagination --- */
 .page-label {
   text-align: center;
   color: #666;
@@ -96,6 +113,7 @@ a:hover { text-decoration: underline; }
   font-size: 0.9rem;
   font-style: italic;
 }
+
 .page-nav {
   display: flex;
   justify-content: center;
@@ -103,6 +121,7 @@ a:hover { text-decoration: underline; }
   gap: 1.5rem;
   margin-top: 2rem;
 }
+
 .page-nav button {
   background-color: #e8e2d6;
   color: #333;
@@ -112,14 +131,21 @@ a:hover { text-decoration: underline; }
   cursor: pointer;
   font-family: 'Lexend', sans-serif;
 }
-.page-nav button:hover { background-color: #dcd5c7; }
-.page-nav button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Footer */
+.page-nav button:hover {
+  background-color: #dcd5c7;
+}
+
+.page-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Page number footer --- */
 footer.page-footer {
   position: absolute;
   bottom: 1.4rem;
-  width: calc(100% - 6rem);
+  width: calc(100% - 8rem);
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
@@ -127,12 +153,16 @@ footer.page-footer {
   font-style: italic;
 }
 
-/* Responsive */
-@media (max-width: 650px) {
+/* --- Responsive --- */
+@media (max-width: 800px) {
   main {
-    padding: 2rem 1.2rem 4rem 1.2rem;
+    max-width: 100%;
+    padding: 2rem 1.5rem 4rem 1.5rem;
     box-shadow: none;
     border-radius: 0;
   }
-  .chapter-text { font-size: 1rem; }
+  .chapter-text {
+    font-size: 1.05rem;
+    max-width: 55ch;
+  }
 }
