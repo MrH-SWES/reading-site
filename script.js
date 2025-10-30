@@ -1,3 +1,4 @@
+/* ----------------- data loading ----------------- */
 async function loadGlossary() {
   const res = await fetch('glossary.json');
   return await res.json();
@@ -8,7 +9,7 @@ async function loadChapter(chapterNum) {
   return await res.text();
 }
 
-/* --- Glossary highlighting --- */
+/* ----------------- glossary injection ----------------- */
 function injectGlossary(text, glossary) {
   for (const term in glossary) {
     const safeTerm = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -22,136 +23,135 @@ function injectGlossary(text, glossary) {
 
 function setupTooltips(glossary) {
   const tooltip = document.getElementById('tooltip');
-  const tooltipContent = document.getElementById('tooltip-content');
+  const content = document.getElementById('tooltip-content');
 
-  document.querySelectorAll('.gloss').forEach(span => {
-    span.addEventListener('mouseenter', e => {
-      const word = span.dataset.word;
-      const entry = glossary[word];
-      tooltipContent.innerHTML = `<strong>${word}</strong><br>${entry.definition || ''}`;
-      if (entry.image) {
-        tooltipContent.innerHTML += `<img src="${entry.image}" alt="${word}">`;
-      }
+  document.querySelectorAll('.gloss').forEach(el => {
+    el.addEventListener('mouseenter', e => {
+      const word = el.dataset.word;
+      const entry = glossary[word] || {};
+      content.innerHTML = `<strong>${word}</strong><br>${entry.definition || ''}`;
+      if (entry.image) content.innerHTML += `<img src="${entry.image}" alt="${word}">`;
       tooltip.classList.remove('hidden');
       tooltip.style.top = `${e.clientY + 15}px`;
       tooltip.style.left = `${e.clientX + 15}px`;
     });
-
-    span.addEventListener('mousemove', e => {
+    el.addEventListener('mousemove', e => {
       tooltip.style.top = `${e.clientY + 15}px`;
       tooltip.style.left = `${e.clientX + 15}px`;
     });
-
-    span.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
+    el.addEventListener('mouseleave', () => tooltip.classList.add('hidden'));
   });
 }
 
-/* --- Pagination parser --- */
+/* ----------------- pagination parsing ----------------- */
+/* Accepts tags even when adjacent: [endPage=13][startPage=14] */
 function parsePages(rawText) {
-  // Normalize spacing between tags (in case [end][start] touch)
-  let text = rawText.replace(/\]\[/g, "]\n["); 
-
-  const startTagRegex = /\[startPage=(\d+)\]/g;
-  const endTagRegex = /\[endPage=(\d+)\]/g;
+  const text = rawText.replace(/\]\[/g, `]\n[`); // normalize adjacency
+  const startTag = /\[startPage=(\d+)\]/g;
+  const endTag = /\[endPage=\d+\]/g;
 
   const pages = [];
-  let match;
-  let lastPageNum = null;
-  let lastIndex = 0;
+  let m, lastNum = null, lastIndex = 0;
 
-  // Find all [startPage] and [endPage] pairs
-  while ((match = startTagRegex.exec(text)) !== null) {
-    if (lastPageNum !== null) {
-      const segment = text.slice(lastIndex, match.index).trim();
-      if (segment.length > 0) {
-        pages.push({ number: lastPageNum, content: segment });
-      }
+  while ((m = startTag.exec(text)) !== null) {
+    if (lastNum !== null) {
+      let slice = text.slice(lastIndex, m.index).replace(endTag, '').trim();
+      if (slice) pages.push({ number: lastNum, content: slice });
     }
-    lastPageNum = parseInt(match[1]);
-    lastIndex = match.index + match[0].length;
+    lastNum = parseInt(m[1], 10);
+    lastIndex = m.index + m[0].length;
   }
-
-  // Handle trailing page
-  if (lastPageNum !== null && lastIndex < text.length) {
-    const remaining = text.slice(lastIndex).trim();
-    if (remaining.length > 0) {
-      // Cut off trailing endPage if present
-      const clean = remaining.replace(endTagRegex, '').trim();
-      pages.push({ number: lastPageNum, content: clean });
-    }
+  if (lastNum !== null) {
+    let tail = text.slice(lastIndex).replace(endTag, '').trim();
+    if (tail) pages.push({ number: lastNum, content: tail });
   }
-
   return pages;
 }
 
-/* --- Paragraph wrapper helper --- */
-function formatParagraphs(text) {
-  // Split paragraphs by blank lines
+/* ----------------- paragraph formatting ----------------- */
+function wrapParagraphs(text) {
+  // Split on blank lines to form paragraphs
   return text
     .split(/\n\s*\n/)
     .map(p => `<p>${p.trim()}</p>`)
-    .join('\n\n');
+    .join('\n');
 }
 
-/* --- Page renderer --- */
-function renderPage(pages, currentIndex, glossary) {
-  const contentDiv = document.getElementById('chapter-content');
-  const navDiv = document.createElement('div');
-  navDiv.classList.add('page-nav');
+/* ----------------- rendering & state ----------------- */
+function saveProgress(chapterNum, pageIndex) {
+  try { localStorage.setItem(`reading_progress_ch${chapterNum}`, String(pageIndex)); } catch {}
+}
 
-  const page = pages[currentIndex];
-  const total = pages.length;
+function loadProgress(chapterNum, maxIndex) {
+  try {
+    const raw = localStorage.getItem(`reading_progress_ch${chapterNum}`);
+    const idx = raw == null ? 0 : Math.max(0, Math.min(maxIndex, parseInt(raw, 10)));
+    return isNaN(idx) ? 0 : idx;
+  } catch { return 0; }
+}
 
-  const processedText = injectGlossary(formatParagraphs(page.content), glossary);
+function renderPage(pages, index, glossary, chapterNum) {
+  const container = document.getElementById('chapter-content');
+  const page = pages[index];
+  if (!page) return;
 
-  contentDiv.innerHTML = `
-    <div class="page-label">Page ${page.number}</div>
-    <div class="chapter-text">${processedText}</div>
-  `;
+  // Build processed HTML and control drop cap only on first page
+  const processed = injectGlossary(wrapParagraphs(page.content), glossary);
+  container.classList.toggle('dropcap', index === 0);  // drop cap only on first page
+  container.innerHTML = processed;
 
-  navDiv.innerHTML = `
-    <button id="prevPage" ${currentIndex === 0 ? 'disabled' : ''}>← Prev</button>
-    <span>Page ${page.number} of ${pages[pages.length - 1].number}</span>
-    <button id="nextPage" ${currentIndex === total - 1 ? 'disabled' : ''}>Next →</button>
-  `;
+  // Header + footer metadata
+  document.getElementById('page-number-display').textContent = `Page ${page.number}`;
+  document.getElementById('page-counter').textContent =
+    `Page ${page.number} of ${pages[pages.length - 1].number}`;
+  document.getElementById('left-page-num').textContent = `Page ${page.number}`;
+  document.getElementById('right-page-num').textContent =
+    document.getElementById('chapter-title').textContent;
 
-  contentDiv.appendChild(navDiv);
+  // Prev/Next buttons
+  const prevBtn = document.getElementById('prevPage');
+  const nextBtn = document.getElementById('nextPage');
+  prevBtn.disabled = index === 0;
+  nextBtn.disabled = index === pages.length - 1;
+
+  prevBtn.onclick = () => {
+    if (index > 0) { saveProgress(chapterNum, index - 1); renderPage(pages, index - 1, glossary, chapterNum); window.scrollTo(0,0); }
+  };
+  nextBtn.onclick = () => {
+    if (index < pages.length - 1) { saveProgress(chapterNum, index + 1); renderPage(pages, index + 1, glossary, chapterNum); window.scrollTo(0,0); }
+  };
+
   setupTooltips(glossary);
-
-  document.getElementById('prevPage')?.addEventListener('click', () => {
-    renderPage(pages, currentIndex - 1, glossary);
-    window.scrollTo(0, 0);
-  });
-
-  document.getElementById('nextPage')?.addEventListener('click', () => {
-    renderPage(pages, currentIndex + 1, glossary);
-    window.scrollTo(0, 0);
-  });
+  saveProgress(chapterNum, index);
 }
 
-/* --- Initialize chapter page --- */
+/* ----------------- init ----------------- */
 async function initChapter() {
   const params = new URLSearchParams(window.location.search);
   const chapterNum = params.get('chapter');
   if (!chapterNum) return;
 
   document.getElementById('chapter-title').textContent = `Chapter ${chapterNum}`;
-  const [glossary, chapterText] = await Promise.all([
-    loadGlossary(),
-    loadChapter(chapterNum)
-  ]);
 
-  const pages = parsePages(chapterText);
+  const [glossary, raw] = await Promise.all([loadGlossary(), loadChapter(chapterNum)]);
+  const pages = parsePages(raw);
+
   if (pages.length === 0) {
-    // no page tags → render full chapter
-    const processedText = injectGlossary(formatParagraphs(chapterText), glossary);
-    document.getElementById('chapter-content').innerHTML =
-      `<div class="chapter-text">${processedText}</div>`;
+    // No tags → render whole chapter, no pagination UI but still hide tags if any.
+    const cleaned = raw.replace(/\[startPage=\d+\]|\[endPage=\d+\]/g, '').trim();
+    const container = document.getElementById('chapter-content');
+    container.classList.add('dropcap'); // treat whole chapter as first page
+    container.innerHTML = injectGlossary(wrapParagraphs(cleaned), glossary);
+    document.getElementById('page-number-display').textContent = '';
+    document.getElementById('page-counter').textContent = '';
+    document.getElementById('prevPage').disabled = true;
+    document.getElementById('nextPage').disabled = true;
     setupTooltips(glossary);
     return;
   }
 
-  renderPage(pages, 0, glossary);
+  const startIndex = loadProgress(chapterNum, pages.length - 1);
+  renderPage(pages, startIndex, glossary, chapterNum);
 }
 
 if (window.location.pathname.endsWith('chapter.html')) {
