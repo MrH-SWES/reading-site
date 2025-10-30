@@ -1,168 +1,62 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap');
-
-html, body {
-  height: 100%;
-  margin: 0;
-  background: #f5efe6;
-}
-
-body {
-  font-family: 'Lexend', sans-serif;
-  color: #2c2a26;
-  line-height: 1.8;
+/* --- Index (homepage) layout --- */
+.index-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: flex-start;
-  padding: 3rem 1rem;
-}
-
-/* --- Book container --- */
-main {
   background: #fdfaf6;
-  max-width: 850px; /* comfortable width for reading */
-  min-height: 85vh;
-  padding: 3rem 4rem 5rem 4rem;
+  max-width: 850px;
+  margin: 3rem auto;
+  padding: 3rem 4rem 4rem 4rem;
   border-radius: 12px;
-  position: relative;
   box-shadow:
     inset 20px 0 25px -25px rgba(0,0,0,0.25),
     inset -20px 0 25px -25px rgba(0,0,0,0.25),
     0 8px 20px rgba(0,0,0,0.1);
 }
 
-/* --- Headings --- */
-h1, h2 {
-  text-align: center;
-  font-weight: 500;
-  margin: 0.5em 0;
+.index-header h1 {
+  margin-top: 0;
+  font-size: 2.2rem;
 }
 
-h1 {
-  font-size: 2.1rem;
-  font-weight: 600;
-}
-
-h2 {
+.index-header p {
   font-size: 1.1rem;
-  font-style: italic;
-  color: #7b705b;
+  margin-bottom: 2rem;
+  color: #5a5346;
 }
 
-/* --- Chapter text --- */
-.chapter-text {
-  font-size: 1.15rem;
-  text-align: justify;
-  hyphens: auto;
-  max-width: 65ch; /* roughly 13–15 words per line */
-  margin: 0 auto;
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
 }
 
-.chapter-text p {
-  text-indent: 1.5em;
-  margin: 0 0 1rem 0;
-}
-
-/* --- Links --- */
-a {
-  color: #4b5d8c;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-a:hover { text-decoration: underline; }
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-}
-
-/* --- Glossary --- */
-.gloss {
-  position: relative;
-  color: #173e6b;
-  background-color: #f0f6ff;
-  border-bottom: 1px dotted #173e6b;
-  cursor: pointer;
-}
-
-.tooltip {
-  position: fixed;
-  background: #fffdf8;
-  border: 1px solid #ccc6b3;
-  padding: 12px;
-  border-radius: 8px;
-  max-width: 260px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  z-index: 1000;
-}
-
-.tooltip img {
-  max-width: 100%;
+.chapter-link {
+  display: block;
+  padding: 0.75rem 1rem;
   border-radius: 6px;
-  margin-top: 8px;
+  background: #f5efe6;
+  color: #2c2a26;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: background 0.2s ease;
+  border: 1px solid #e2dacb;
 }
 
-.hidden { display: none; }
-
-/* --- Pagination --- */
-.page-label {
-  text-align: center;
-  color: #666;
-  margin: 1rem 0;
-  font-size: 0.9rem;
-  font-style: italic;
+.chapter-link:hover {
+  background: #ede6da;
 }
 
+/* --- Cleaner page nav (remove counter) --- */
 .page-nav {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1.5rem;
-  margin-top: 2rem;
+  gap: 2rem;
+  margin-top: 2.5rem;
 }
 
-.page-nav button {
-  background-color: #e8e2d6;
-  color: #333;
-  border: 1px solid #bfb8a9;
-  border-radius: 4px;
-  padding: 6px 14px;
-  cursor: pointer;
-  font-family: 'Lexend', sans-serif;
-}
-
-.page-nav button:hover {
-  background-color: #dcd5c7;
-}
-
-.page-nav button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-/* --- Page number footer --- */
-footer.page-footer {
-  position: absolute;
-  bottom: 1.4rem;
-  width: calc(100% - 8rem);
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  color: #8c8371;
-  font-style: italic;
-}
-
-/* --- Responsive --- */
-@media (max-width: 800px) {
-  main {
-    max-width: 100%;
-    padding: 2rem 1.5rem 4rem 1.5rem;
-    box-shadow: none;
-    border-radius: 0;
-  }
-  .chapter-text {
-    font-size: 1.05rem;
-    max-width: 55ch;
-  }
+.page-label {
+  display: none; /* hides the "Page X of Y" label */
 }
