@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600&family=Atkinson+Hyperlegible&display=swap');
+
+body {
+  font-family: 'Atkinson Hyperlegible', 'Lexend', sans-serif;
+  background-color: #f5f8fb;
+  color: #222;
+  line-height: 1.7;
+  margin: 0;
+  padding: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header {
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+a {
+  color: #005fa3;
+  text-decoration: none;
+  display: block;
+  margin: 0.5em 0;
+  font-size: 1.2em;
+}
+
+a:hover { text-decoration: underline; }
+
+.chapter-text {
+  white-space: pre-wrap;
+  font-size: 1.1em;
+}
+
+.gloss {
+  position: relative;
+  color: #003366;
+  background-color: #eaf3ff;
+  border-bottom: 1px dotted #005fa3;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: fixed;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 250px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.tooltip img {
+  max-width: 100%;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+.hidden { display: none; }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+/* --- Teacher UI --- */
+.editor-panel {
+  background: white;
+  padding: 1em;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.editor-panel h2 {
+  color: #003366;
+  margin-top: 0;
+}
+
+input[type=text], textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+}
+
+button {
+  background-color: #005fa3;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+button:hover {
+  background-color: #004a82;
+}
