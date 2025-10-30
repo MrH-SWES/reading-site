@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reading Portal</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reading Portal</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>Reading Portal</h1>
-  <p>Select a chapter to begin reading.</p>
-</header>
-<main id="content-area">
-  <a href="chapter.html?chapter=1">Chapter 1: Suqua</a>
-  <a href="chapter.html?chapter=2">Chapter 2</a>
-</main>
+  <main class="index-container">
+    <div class="index-header">
+      <h1>Reading Portal</h1>
+      <p>Select a chapter to begin reading.</p>
+    </div>
+    <div class="chapter-list" id="chapter-list"></div>
+  </main>
+  <script>
+    // Dynamically load chapter links
+    const chapters = [
+      { number: 1, title: "Suqua" },
+      { number: 2, title: "Chapter 2" }
+      // Add more here
+    ];
+
+    const list = document.getElementById('chapter-list');
+    chapters.forEach(ch => {
+      const link = document.createElement('a');
+      link.href = `chapter.html?chapter=${ch.number}`;
+      link.textContent = `Chapter ${ch.number}: ${ch.title}`;
+      link.className = 'chapter-link';
+      list.appendChild(link);
+    });
+  </script>
 </body>
 </html>
