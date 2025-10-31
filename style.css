@@ -138,8 +138,8 @@ h1 {
   text-align: center;
   font-style: italic;
   color: #6a635a;
-  margin-bottom: 2rem;
-  margin-top: 0;
+  margin-bottom: 0;
+  margin-top: 2rem;
   order: 999;
 }
 
@@ -203,13 +203,13 @@ h1 {
   margin: 0;
   padding: 0;
 }
+
 .glossary-term {
   color: #27496d;
   font-weight: 600;
   cursor: pointer;
   border-bottom: 1px dotted #5d7fa8;
   background: none;
-  border: none;
   border-top: none;
   border-left: none;
   border-right: none;
@@ -221,21 +221,23 @@ h1 {
   vertical-align: baseline;
   display: inline;
 }
+
 .glossary-term:focus {
   outline: 2px solid #a0c4ff;
   outline-offset: 1px;
 }
 
+/* Glossary definition popup - positioned in the LEFT MARGIN */
 .glossary-definition {
   position: absolute;
-  left: 100%;
+  right: 100%; /* Position to the left of the word */
   top: 0;
-  margin-left: 10px;
+  margin-right: 10px; /* Small gap from the text */
   z-index: 30;
   visibility: hidden;
   opacity: 0;
   width: 280px;
-  pointer-events: auto;
+  pointer-events: none;
   background: #fffbe8;
   border: 1px solid #cbb77c;
   border-radius: 10px;
@@ -246,6 +248,15 @@ h1 {
   line-height: 1.45;
   text-align: left;
   transition: opacity 120ms ease;
+}
+
+/* Show definition when active */
+.glossary-wrap:hover .glossary-definition,
+.glossary-wrap.pin .glossary-definition,
+.glossary-term:focus + .glossary-definition {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .glossary-definition-text {
@@ -261,18 +272,20 @@ h1 {
   border-radius: 4px;
 }
 
-.glossary-wrap:hover .glossary-definition,
-.glossary-wrap.pin .glossary-definition,
-.glossary-term:focus + .glossary-definition {
-  visibility: visible;
-  opacity: 1;
-}
-
+/* Highlight term when popup is shown */
 .glossary-wrap:hover .glossary-term,
 .glossary-wrap.pin .glossary-term {
   background: #e6f0ff;
   color: #1e3752;
   border-bottom-color: #27496d;
+}
+
+/* If term is near the left edge, flip popup to the right side */
+.glossary-wrap.flip-right .glossary-definition {
+  right: auto;
+  left: 100%;
+  margin-right: 0;
+  margin-left: 10px;
 }
 
 /* =============== MOBILE =============== */
@@ -285,20 +298,20 @@ h1 {
   .book-card, .contents-card {
     max-width: 90%;
   }
+  
+  /* On mobile, show popup below the word instead of in margin */
   .glossary-definition {
+    right: auto;
     left: 0;
     top: 100%;
-    margin-left: 0;
+    margin-right: 0;
     margin-top: 8px;
     width: 90vw;
+    max-width: 300px;
+  }
+  
+  .glossary-wrap.flip-right .glossary-definition {
+    left: 0;
+    margin-left: 0;
   }
 }
-
-
-
-
-
-
-
-
-
