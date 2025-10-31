@@ -186,7 +186,9 @@ h1 {
 /* =============== GLOSSARY POPUPS =============== */
 .glossary-wrap {
   position: relative;
-  display: inline-block;
+  display: inline;
+  margin: 0;
+  padding: 0;
 }
 .glossary-term {
   color: #27496d;
@@ -278,4 +280,5 @@ h1 {
     width: 90vw;
   }
 }
+
 
