@@ -1,54 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Portal – Suqua</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daughter of Suqua – Reading Portal</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="index-container">
-    <div>
-      <div class="book-header">
-        <img 
-          src="assets/suqua-cover.jpg"
-          alt="Suqua Book Cover"
-          class="book-cover"
-        >
-        <div class="book-meta">
-          <h1 class="book-title">Suqua</h1>
-          <p class="book-author">by Diane Johnston Hamm</p>
-          <p class="book-subtitle">Reading Portal</p>
-        </div>
-      </div>
+  <main class="index-container">
+    <div class="book-card">
+      <img
+        src="assets/suqua-cover.jpg"
+        alt="Daughter of Suqua Book Cover"
+        class="book-cover"
+      />
+      <h1 class="book-title">Daughter of Suqua</h1>
+      <p class="book-author">by Diane Johnston Hamm</p>
+      <p class="book-subtitle">Reading Portal</p>
 
-      <div class="chapter-list" id="chapter-list">
-        <p>Loading chapters...</p>
-      </div>
+      <div class="chapter-list" id="chapter-list">
+        <p>Loading chapters...</p>
+      </div>
     </div>
-  </main>
+  </main>
 
-  <script>
-    fetch("chapters/manifest.json")
-      .then(res => {
-        if (!res.ok) throw new Error("Failed to load manifest");
-        return res.json();
-      })
-      .then(chapters => {
-        const list = document.getElementById("chapter-list");
-        list.innerHTML = "";
-        chapters.forEach((ch, i) => {
-          const link = document.createElement("a");
-          link.href = `chapter.html?chapter=${ch.file}`;
-          link.textContent = `Chapter ${i + 1}: ${ch.title}`;
-          link.className = "chapter-link";
-          list.appendChild(link);
-        });
-      })
-      .catch(err => {
-        document.getElementById("chapter-list").innerHTML =
-          `<p class="error">Error loading chapters: ${err.message}</p>`;
-      });
-  </script>
+  <script>
+    fetch("chapters/manifest.json")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load manifest");
+        return res.json();
+      })
+      .then((chapters) => {
+        const list = document.getElementById("chapter-list");
+        list.innerHTML = "";
+        chapters.forEach((ch, i) => {
+          const link = document.createElement("a");
+          link.href = `chapter.html?chapter=${ch.file}`;
+          link.textContent = `Chapter ${i + 1}: ${ch.title}`;
+          link.className = "chapter-link";
+          list.appendChild(link);
+        });
+      })
+      .catch((err) => {
+        document.getElementById("chapter-list").innerHTML =
+          `<p class="error">Error loading chapters: ${err.message}</p>`;
+      });
+  </script>
 </body>
 </html>
