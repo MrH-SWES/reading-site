@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
   let processed = text;
-  let uid = 0;
   const usedTerms = new Set();
 
   for (const original of terms) {
@@ -47,38 +46,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (usedTerms.has(original.toLowerCase())) continue;
 
-    const defText = typeof data === "object" ? data.definition : String(data);
-    const imgHtml =
-      typeof data === "object" && data.image
-        ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
-        : "";
-
-    // Create a regex that ONLY matches text that's NOT already inside a glossary span
     const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "i");
 
-    // Split by existing glossary-wrap spans to avoid matching inside them
-    const parts = processed.split(/(<span class="glossary-wrap">[\s\S]*?<\/span><\/span>)/);
+    const parts = processed.split(/(<span class="glossary-wrap">[\s\S]*?<\/span>)/);
     
     let foundAndReplaced = false;
     const newParts = parts.map(part => {
-      // If this part is already a glossary span, don't touch it
       if (part.startsWith('<span class="glossary-wrap">')) {
         return part;
       }
       
-      // Only replace in the first non-glossary part where we find a match
       if (!foundAndReplaced && regex.test(part)) {
         foundAndReplaced = true;
         usedTerms.add(original.toLowerCase());
-        const id = `def-${uid++}`;
         return part.replace(regex, (match) => {
-          return (
-            `<span class="glossary-wrap">` +
-            `<button type="button" class="glossary-term" aria-describedby="${id}">${match}</button>` +
-            `<span id="${id}" class="glossary-definition" role="status" aria-live="off" aria-atomic="true">` +
-            `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-            `</span></span>`
-          );
+          // Store the term in a data attribute for later popup creation
+          return `<span class="glossary-wrap" data-term="${original.toLowerCase()}">${match}</span>`;
         });
       }
       
@@ -91,62 +74,117 @@ document.addEventListener("DOMContentLoaded", () => {
   return processed;
 }
 
-  function enhanceGlossary() {
-    document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
-      const termBtn = wrap.querySelector(".glossary-term");
-      const definition = wrap.querySelector(".glossary-definition");
-      if (!termBtn || !definition) return;
+function enhanceGlossary() {
+  const popupContainer = document.getElementById('glossary-popup-container');
+  if (!popupContainer) return;
 
-      // Check if near left edge and flip to right if needed
+  let activePopup = null;
+
+  document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
+    const termText = wrap.textContent;
+    const termKey = wrap.getAttribute('data-term');
+    
+    if (!termKey || !glossary[termKey]) return;
+
+    const data = glossary[termKey];
+    const defText = typeof data === "object" ? data.definition : String(data);
+    const imgHtml = typeof data === "object" && data.image
+      ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
+      : "";
+
+    // Make the term visually styled and clickable
+    wrap.classList.add('glossary-term');
+    wrap.setAttribute('role', 'button');
+    wrap.setAttribute('tabindex', '0');
+    wrap.setAttribute('aria-label', `${termText}, click for definition`);
+
+    const showPopup = (e) => {
+      e.stopPropagation();
+
+      // Close any existing popup
+      if (activePopup) {
+        activePopup.remove();
+        activePopup = null;
+      }
+
+      // Create popup in the separate container
+      const popup = document.createElement('div');
+      popup.className = 'glossary-popup';
+      popup.setAttribute('role', 'dialog');
+      popup.setAttribute('aria-label', `Definition of ${termText}`);
+      popup.innerHTML = `
+        <div class="glossary-popup-content">
+          <button class="glossary-popup-close" aria-label="Close definition">×</button>
+          <div class="glossary-popup-text">${defText}</div>
+          ${imgHtml}
+        </div>
+      `;
+
+      // Position the popup relative to the term
       const rect = wrap.getBoundingClientRect();
-      if (rect.left < 340) {
-        wrap.classList.add("flip-right");
+      popup.style.position = 'fixed';
+      
+      // Try to position on the left
+      if (rect.left > 320) {
+        popup.style.right = `${window.innerWidth - rect.left + 15}px`;
+        popup.style.top = `${rect.top}px`;
+      } else {
+        // If too close to left edge, position on the right
+        popup.style.left = `${rect.right + 15}px`;
+        popup.style.top = `${rect.top}px`;
       }
 
-      termBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        
-        // Close all other pinned definitions first
-        document.querySelectorAll(".glossary-wrap.pin").forEach((otherWrap) => {
-          if (otherWrap !== wrap) {
-            otherWrap.classList.remove("pin");
-            const otherBtn = otherWrap.querySelector(".glossary-term");
-            const otherDef = otherWrap.querySelector(".glossary-definition");
-            if (otherBtn) otherBtn.setAttribute("aria-expanded", "false");
-            if (otherDef) otherDef.setAttribute("aria-live", "off");
-          }
-        });
-        
-        // Toggle this one
-        const nowPinned = wrap.classList.toggle("pin");
-        termBtn.setAttribute("aria-expanded", nowPinned ? "true" : "false");
-        
-        // Control aria-live to prevent reading background content
-        if (nowPinned) {
-          definition.setAttribute("aria-live", "polite");
-          // Reset after announcement
-          setTimeout(() => {
-            definition.setAttribute("aria-live", "off");
-          }, 100);
-        } else {
-          definition.setAttribute("aria-live", "off");
-        }
+      popupContainer.appendChild(popup);
+      activePopup = popup;
+
+      // Highlight the term
+      wrap.classList.add('active');
+
+      // Close button functionality
+      const closeBtn = popup.querySelector('.glossary-popup-close');
+      closeBtn.addEventListener('click', () => {
+        popup.remove();
+        activePopup = null;
+        wrap.classList.remove('active');
+        wrap.focus();
       });
-    });
 
-    // Close all definitions when clicking outside
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".glossary-wrap")) {
-        document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
-          const termBtn = wrap.querySelector(".glossary-term");
-          const definition = wrap.querySelector(".glossary-definition");
-          wrap.classList.remove("pin");
-          if (termBtn) termBtn.setAttribute("aria-expanded", "false");
-          if (definition) definition.setAttribute("aria-live", "off");
-        });
+      // Focus the close button for accessibility
+      closeBtn.focus();
+    };
+
+    wrap.addEventListener('click', showPopup);
+    wrap.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        showPopup(e);
       }
     });
-  }
+  });
+
+  // Close popup when clicking outside
+  document.addEventListener('click', (e) => {
+    if (activePopup && !e.target.closest('.glossary-popup') && !e.target.closest('.glossary-wrap')) {
+      const activeTerm = document.querySelector('.glossary-wrap.active');
+      activePopup.remove();
+      activePopup = null;
+      if (activeTerm) activeTerm.classList.remove('active');
+    }
+  });
+
+  // Close popup on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && activePopup) {
+      const activeTerm = document.querySelector('.glossary-wrap.active');
+      activePopup.remove();
+      activePopup = null;
+      if (activeTerm) {
+        activeTerm.classList.remove('active');
+        activeTerm.focus();
+      }
+    }
+  });
+}
 
   function renderPage() {
     if (!pages.length) return;
@@ -242,5 +280,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
 
 
