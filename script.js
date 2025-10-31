@@ -19,19 +19,22 @@ document.addEventListener("DOMContentLoaded", () => {
   function makeParagraphHTML(rawText) {
     const norm = rawText.replace(/\r/g, "");
     const parts = norm
-      // Split on blank line or newline followed by capital or quote
+      // Split on blank line or newline followed by capital/quote
       .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
       .map(s =>
         s
-          .replace(/\s+(?=<)/g, " ") // preserve one space before glossary tags
+          .replace(/\s+(?=<)/g, " ") // preserve space before glossary tags
           .replace(/\s+/g, " ")
-          .replace(/\s+([,.!?;:])/g, "$1") // remove space before punctuation
-          .trim()
+          .replace(/\s+([,.!?;:])/g, "$1") // clean punctuation
+          .replace(/([“"'])\s+/g, "$1") // tighten after quotes
+          .replace(/^\s+/, "") // only trim the *start* once
+          .replace(/\s+$/, "") // but keep the space before first word intact
       )
       .filter(Boolean);
 
     return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n");
   }
+
 
   function renderGlossaryInline(text) {
     if (!glossary || !Object.keys(glossary).length) return text;
@@ -161,3 +164,4 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
