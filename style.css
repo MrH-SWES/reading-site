@@ -161,7 +161,7 @@ h1 {
   white-space: normal;
 }
 
-/* First paragraph should not be indented */
+/* First paragraph on first page only should not be indented */
 .first-page .chapter-content p:first-of-type {
   text-indent: 0;
 }
@@ -208,11 +208,8 @@ h1 {
   color: #27496d;
   font-weight: 600;
   cursor: pointer;
-  border-bottom: 1px dotted #5d7fa8;
   background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
+  border: none;
   padding: 0;
   margin: 0;
   font-family: inherit;
@@ -220,6 +217,7 @@ h1 {
   line-height: inherit;
   vertical-align: baseline;
   display: inline;
+  text-decoration: none;
 }
 
 .glossary-term:focus {
@@ -277,7 +275,6 @@ h1 {
 .glossary-wrap.pin .glossary-term {
   background: #e6f0ff;
   color: #1e3752;
-  border-bottom-color: #27496d;
 }
 
 /* If term is near the left edge, flip popup to the right side */
