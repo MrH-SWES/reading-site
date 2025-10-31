@@ -24,12 +24,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function makeParagraphHTML(rawText) {
     const norm = rawText.replace(/\r/g, "");
     const parts = norm
-      .split(/(?:\n{2,})|\n(?=[A-Z“"'])/g)
-      .map(s => s.replace(/\s+/g, " ").trim())
+      // Split on a newline followed by a capital or quote, OR on blank lines.
+      .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
+      // Clean up spacing and punctuation leftovers.
+      .map(s =>
+        s
+          .replace(/\s+/g, " ")
+          .replace(/\s+([,.!?;:])/g, "$1") // remove spaces before punctuation
+          .replace(/([“"'])\s+/g, "$1") // no extra space after quotes
+          .trim()
+      )
       .filter(Boolean);
 
     return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n");
   }
+
 
   function renderGlossaryInline(text) {
     if (!glossary || !Object.keys(glossary).length) return text;
@@ -163,3 +172,4 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
