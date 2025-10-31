@@ -11,7 +11,10 @@ body {
   padding: 0;
 }
 
-* { transition: all 0.3s ease; }
+* {
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
 
 /* ===========================
    INDEX PAGE
@@ -106,7 +109,9 @@ body {
   width: 100%;
 }
 
-.contents-link:hover { color: #1e3d5a; }
+.contents-link:hover {
+  color: #1e3d5a;
+}
 
 /* ===========================
    CHAPTER PAGE
@@ -137,7 +142,9 @@ body.chapter-page {
   font-weight: 600;
   text-decoration: none;
 }
-.back-link:hover { text-decoration: underline; }
+.back-link:hover {
+  text-decoration: underline;
+}
 
 h1 {
   text-align: center;
@@ -166,10 +173,15 @@ h1 {
 }
 
 .chapter-content p {
-  margin: 0.6em 0 0.6em 0;
+  margin: 0.85em 0;
 }
 
-.chapter-content p:first-of-type::first-letter {
+.chapter-content p + p {
+  text-indent: 1.5em;
+}
+
+/* Drop cap only on first page */
+.first-page .chapter-content p:first-of-type::first-letter {
   float: left;
   font-size: 3.5rem;
   line-height: 0.85;
@@ -178,10 +190,9 @@ h1 {
   color: #1f1d18;
 }
 
-.chapter-content p + p {
-  text-indent: 1.5em;
-}
-
+/* ===========================
+   NAV BUTTONS
+   =========================== */
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -200,10 +211,12 @@ h1 {
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
-.nav-button:hover { background-color: #dfd4b8; }
+.nav-button:hover {
+  background-color: #dfd4b8;
+}
 
 /* ===========================
-   GLOSSARY (to the right)
+   GLOSSARY POPUPS
    =========================== */
 .glossary-wrap {
   position: relative;
@@ -279,5 +292,16 @@ h1 {
     align-items: center;
     gap: 2rem;
   }
-  .book-card, .contents-card { max-width: 90%; }
+  .book-card,
+  .contents-card {
+    max-width: 90%;
+  }
+
+  .glossary-definition {
+    left: 0;
+    top: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+    width: 90vw;
+  }
 }
