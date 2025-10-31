@@ -207,133 +207,122 @@ h1 {
 }
 .nav-button:hover { background: #dfd4b8; }
 
-/* =============== GLOSSARY POPUPS =============== */
+/* =============== GLOSSARY TERMS =============== */
 .glossary-wrap {
-  position: relative;
-  display: inline;
-  margin: 0;
-  padding: 0;
-}
-
-.glossary-term {
   color: #27496d;
   font-weight: 600;
   cursor: pointer;
-  background: none;
-  border: none;
+  display: inline;
   padding: 0;
   margin: 0;
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  vertical-align: baseline;
-  display: inline;
-  text-decoration: none;
+  border-radius: 2px;
+  transition: background 0.15s ease;
 }
 
-.glossary-term:focus {
-  outline: 2px solid #a0c4ff;
-  outline-offset: 1px;
+.glossary-wrap:hover,
+.glossary-wrap:focus {
+  background: #e6f0ff;
+  outline: none;
 }
 
-/* Glossary definition popup - positioned in the LEFT MARGIN */
-.glossary-definition {
-  position: absolute;
-  right: 100%;
+.glossary-wrap.active {
+  background: #d0e7ff;
+}
+
+/* =============== GLOSSARY POPUP CONTAINER =============== */
+#glossary-popup-container {
+  position: fixed;
   top: 0;
-  margin-right: 10px;
-  z-index: 30;
-  visibility: hidden;
-  opacity: 0;
-  width: 280px;
+  left: 0;
+  width: 0;
+  height: 0;
   pointer-events: none;
-  background: #fffbe8;
-  border: 1px solid #cbb77c;
-  border-radius: 10px;
-  padding: 14px 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,.25);
-  color: #2a2722;
-  font-size: 1rem;
-  line-height: 1.45;
-  text-align: left;
-  transition: opacity 120ms ease;
-  isolation: isolate;
+  z-index: 9999;
 }
 
-/* When definition is shown by clicking (pinned) */
-.glossary-wrap.pin .glossary-definition {
-  visibility: visible;
-  opacity: 1;
+/* =============== GLOSSARY POPUP =============== */
+.glossary-popup {
+  position: fixed;
+  width: 300px;
   pointer-events: auto;
+  z-index: 10000;
+  animation: fadeIn 0.15s ease;
 }
 
-/* When definition is shown by hovering */
-.glossary-wrap:hover .glossary-definition {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: none;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.glossary-definition-text {
-  display: block;
-  user-select: none;
-  -webkit-user-select: none;
+.glossary-popup-content {
+  background: #fffbe8;
+  border: 2px solid #cbb77c;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
-/* Only allow selection when pinned */
-.glossary-wrap.pin .glossary-definition-text {
+.glossary-popup-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6b5d4f;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.glossary-popup-close:hover {
+  background: #f0e8d0;
+}
+
+.glossary-popup-close:focus {
+  outline: 2px solid #a0c4ff;
+  outline-offset: 2px;
+}
+
+.glossary-popup-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #2a2722;
+  padding-right: 20px;
   user-select: text;
-  -webkit-user-select: text;
 }
 
 .glossary-image {
   display: block;
   width: 100%;
-  max-width: 200px;
-  margin-top: 8px;
-  border-radius: 4px;
-}
-
-/* Highlight term when popup is shown */
-.glossary-wrap:hover .glossary-term,
-.glossary-wrap.pin .glossary-term {
-  background: #e6f0ff;
-  color: #1e3752;
-}
-
-/* If term is near the left edge, flip popup to the right side */
-.glossary-wrap.flip-right .glossary-definition {
-  right: auto;
-  left: 100%;
-  margin-right: 0;
-  margin-left: 10px;
+  max-width: 250px;
+  margin-top: 12px;
+  border-radius: 6px;
 }
 
 /* =============== MOBILE =============== */
 @media (max-width: 900px) {
-  .index-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-  .book-card, .contents-card {
-    max-width: 90%;
-  }
-  
-  /* On mobile, show popup below the word instead of in margin */
-  .glossary-definition {
-    right: auto;
-    left: 0;
-    top: 100%;
-    margin-right: 0;
-    margin-top: 8px;
+  .glossary-popup {
+    left: 50% !important;
+    right: auto !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%);
     width: 90vw;
-    max-width: 300px;
-  }
-  
-  .glossary-wrap.flip-right .glossary-definition {
-    left: 0;
-    margin-left: 0;
+    max-width: 350px;
   }
 }
+
 
