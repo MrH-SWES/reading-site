@@ -18,20 +18,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function makeParagraphHTML(rawText) {
   const norm = rawText.replace(/\r/g, "");
+
   const parts = norm
-    // Split on blank lines or newline followed by capital or quote
+    // Split paragraphs cleanly on blank lines or newline followed by capital/quote
     .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
     .map(s =>
       s
-        .replace(/\s+/g, " ")               // collapse all whitespace
-        .replace(/\s+([,.!?;:])/g, "$1")    // clean punctuation spacing
-        .trim()                             // trim edges cleanly
+        .replace(/\s+([,.!?;:])/g, "$1") // remove spaces before punctuation
+        .replace(/\s+/g, " ") // collapse extra spaces inside paragraph
+        .trim()
     )
     .filter(Boolean);
 
-  // Join with a deliberate normal space before <p> so the browser never inserts &nbsp;
-  return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join(" ");
+  // Each paragraph wrapped in <p>, separated with a blank line for readability
+  return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n\n");
 }
+
 
 
 
@@ -163,5 +165,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
 
 
