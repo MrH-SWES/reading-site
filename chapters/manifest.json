@@ -8,5 +8,10 @@
     "number": 2,
     "title": "Little Grandma",
     "file": "chapter2.txt"
+  },
+  {
+    "number": 3,
+    "title": "Fishing Camp",
+    "file": "chapter3.txt"
   }
 ]
