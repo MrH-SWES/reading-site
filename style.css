@@ -1,19 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
 /* ===========================
    GLOBAL STYLES
    =========================== */
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
-
 body {
   font-family: 'Lexend', sans-serif;
   background-color: #f8f4ee;
+  color: #2e2e2e;
   margin: 0;
   padding: 0;
-  color: #2e2e2e;
-  display: flex;
-  justify-content: center;
 }
 
-/* Smooth transitions */
+/* Smooth fade between pages */
 * {
   transition: all 0.3s ease;
 }
@@ -21,7 +19,6 @@ body {
 /* ===========================
    INDEX PAGE STYLES
    =========================== */
-
 .index-container {
   display: flex;
   justify-content: center;
@@ -31,73 +28,66 @@ body {
   padding: 2rem;
 }
 
-/* Book card section */
-.book-header {
-  background: #fffdf8;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  padding: 2.5rem 3rem;
+.book-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25rem;
   text-align: center;
-  max-width: 500px;
+  background: #fffdf8;
+  border-radius: 20px;
+  padding: 3rem 3.5rem;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08),
+              0 4px 12px rgba(0, 0, 0, 0.05);
+  max-width: 520px;
 }
 
 .book-cover {
   width: 100%;
-  max-width: 280px;
+  max-width: 320px;
   border-radius: 10px;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
-}
-
-.book-meta {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .book-title {
   font-weight: 700;
   font-size: 2rem;
-  margin-bottom: 0.25rem;
-  color: #1f1e1a;
+  color: #1e1b15;
+  margin: 0.5rem 0 0.25rem 0;
 }
 
 .book-author {
   font-style: italic;
-  font-size: 1.1rem;
+  font-weight: 400;
   color: #6b6b6b;
+  font-size: 1.1rem;
   margin-bottom: 0.5rem;
 }
 
 .book-subtitle {
   font-size: 1rem;
-  color: #4b4b4b;
-  margin-bottom: 1rem;
+  color: #555;
+  margin-bottom: 1.5rem;
 }
 
-/* Chapter links */
 .chapter-list {
-  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  width: 100%;
   align-items: center;
 }
 
 .chapter-link {
   display: block;
   text-decoration: none;
-  color: #3d5a80;
   background-color: #f0ebe1;
-  padding: 0.75rem 1.25rem;
-  border-radius: 6px;
+  color: #3d5a80;
   font-weight: 500;
   width: 80%;
-  text-align: center;
-  transition: all 0.2s ease;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .chapter-link:hover {
@@ -108,7 +98,6 @@ body {
 /* ===========================
    CHAPTER PAGE STYLES
    =========================== */
-
 body.chapter-page {
   background-color: #f5f2eb;
   background-image: radial-gradient(#ebe6da 1px, transparent 1px);
@@ -123,7 +112,6 @@ body.chapter-page {
   margin: 2rem auto;
   padding: 3rem 3.5rem;
   max-width: 620px;
-  width: 100%;
   border-radius: 6px;
   border: 1px solid #e3dcca;
   box-shadow: 0 3px 10px rgba(0,0,0,0.12), 0 8px 30px rgba(0,0,0,0.08);
@@ -141,7 +129,6 @@ body.chapter-page {
   text-decoration: underline;
 }
 
-/* Chapter heading */
 h1 {
   text-align: center;
   font-weight: 600;
@@ -150,7 +137,6 @@ h1 {
   color: #1e1b15;
 }
 
-/* Page number */
 .page-number {
   text-align: center;
   font-style: italic;
@@ -158,9 +144,7 @@ h1 {
   margin-bottom: 2rem;
 }
 
-/* Main reading area */
 .chapter-content {
-  font-family: 'Lexend', sans-serif;
   line-height: 1.75;
   font-size: 1.05rem;
   color: #2a2722;
@@ -171,7 +155,6 @@ h1 {
   margin: 0 auto;
 }
 
-/* Drop cap for first paragraph */
 .chapter-content p:first-of-type::first-letter {
   float: left;
   font-size: 3.5rem;
@@ -181,13 +164,11 @@ h1 {
   color: #1f1d18;
 }
 
-/* Indentation for following paragraphs */
 .chapter-content p + p {
   text-indent: 1.5em;
   margin-top: 0.75em;
 }
 
-/* Pagination buttons */
 .nav-buttons {
   display: flex;
   justify-content: center;
@@ -214,23 +195,21 @@ h1 {
 /* ===========================
    GLOSSARY TERMS
    =========================== */
-
 .glossary-term {
-  color: #27496d;               /* deep ink blue */
+  color: #27496d;
   font-weight: 600;
   cursor: pointer;
   position: relative;
-  border-bottom: 1px dotted #5d7fa8;  /* subtle underline */
+  border-bottom: 1px dotted #5d7fa8;
   text-decoration: none;
 }
 
 .glossary-term:hover {
-  background-color: #e6f0ff;    /* pale blue hover */
+  background-color: #e6f0ff;
   border-bottom-color: #27496d;
   color: #1e3752;
 }
 
-/* Tooltip styling */
 .tooltip {
   position: absolute;
   background: #fffbe8;
@@ -246,19 +225,17 @@ h1 {
 }
 
 /* ===========================
-   RESPONSIVE DESIGN
+   RESPONSIVE
    =========================== */
 @media (max-width: 768px) {
+  .book-card {
+    padding: 2rem 1.5rem;
+  }
+  .book-cover {
+    max-width: 220px;
+  }
   .chapter-container {
     margin: 1.5rem;
     padding: 1.5rem;
-  }
-
-  .book-header {
-    padding: 2rem 1.5rem;
-  }
-
-  .book-cover {
-    max-width: 220px;
   }
 }
