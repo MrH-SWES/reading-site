@@ -8,7 +8,8 @@
 </head>
 <body>
   <main class="index-container">
-    <div class="book-card">
+    <!-- Left: Book cover -->
+    <section class="book-card">
       <img
         src="assets/suqua-cover.jpg"
         alt="Daughter of Suqua Book Cover"
@@ -17,33 +18,36 @@
       <h1 class="book-title">Daughter of Suqua</h1>
       <p class="book-author">by Diane Johnston Hamm</p>
       <p class="book-subtitle">Reading Portal</p>
+    </section>
 
-      <div class="chapter-list" id="chapter-list">
-        <p>Loading chapters...</p>
-      </div>
-    </div>
+    <!-- Right: Table of contents -->
+    <section class="contents-card">
+      <h2 class="contents-heading">Contents</h2>
+      <ul id="contents-list" class="contents-list">
+        <li>Loading...</li>
+      </ul>
+    </section>
   </main>
 
   <script>
     fetch("chapters/manifest.json")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load manifest");
-        return res.json();
-      })
-      .then((chapters) => {
-        const list = document.getElementById("chapter-list");
+      .then(res => res.json())
+      .then(chapters => {
+        const list = document.getElementById("contents-list");
         list.innerHTML = "";
         chapters.forEach((ch, i) => {
-          const link = document.createElement("a");
-          link.href = `chapter.html?chapter=${ch.file}`;
-          link.textContent = `Chapter ${i + 1}: ${ch.title}`;
-          link.className = "chapter-link";
-          list.appendChild(link);
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = `chapter.html?chapter=${ch.file}`;
+          a.textContent = `${ch.title}`;
+          a.className = "contents-link";
+          li.appendChild(a);
+          list.appendChild(li);
         });
       })
-      .catch((err) => {
-        document.getElementById("chapter-list").innerHTML =
-          `<p class="error">Error loading chapters: ${err.message}</p>`;
+      .catch(err => {
+        document.getElementById("contents-list").innerHTML =
+          `<li class="error">Error loading chapters: ${err.message}</li>`;
       });
   </script>
 </body>
