@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements on chapter.html
   const chapterContainer = document.querySelector(".chapter-content");
   const pageNumberDisplay = document.querySelector(".page-number");
   const prevButton = document.getElementById("prev");
@@ -17,28 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  // Split into paragraph blocks by:
-  //  - 2+ newlines (true blank line), OR
-  //  - a SINGLE newline where the next char starts a new paragraph (capital letter or opening quote).
-  // Then, inside each paragraph, collapse any remaining newlines/spaces to single spaces.
   function makeParagraphHTML(rawText) {
     const norm = rawText.replace(/\r/g, "");
     const parts = norm
-      // Split on a newline followed by a capital or quote, OR on blank lines.
+      // Split on blank line or newline followed by capital or quote
       .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
-      // Clean up spacing and punctuation leftovers.
       .map(s =>
         s
+          .replace(/\s+(?=<)/g, " ") // preserve one space before glossary tags
           .replace(/\s+/g, " ")
-          .replace(/\s+([,.!?;:])/g, "$1") // remove spaces before punctuation
-          .replace(/([“"'])\s+/g, "$1") // no extra space after quotes
+          .replace(/\s+([,.!?;:])/g, "$1") // remove space before punctuation
           .trim()
       )
       .filter(Boolean);
 
     return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n");
   }
-
 
   function renderGlossaryInline(text) {
     if (!glossary || !Object.keys(glossary).length) return text;
@@ -63,14 +56,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = `def-${uid++}`;
         return (
           `<span class="glossary-wrap">` +
-            `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" data-term="${original}">${match}</button>` +
-            `<span id="${id}" class="glossary-definition" role="note">` +
-              `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-            `</span>` +
-          `</span>`
+          `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" data-term="${original}">${match}</button>` +
+          `<span id="${id}" class="glossary-definition" role="note">` +
+          `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
+          `</span></span>`
         );
       });
     }
+
     return processed;
   }
 
@@ -79,7 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const termBtn = wrap.querySelector(".glossary-term");
       if (!termBtn) return;
 
-      // Click toggles pin so students can select text for TTS
       termBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         const pinned = wrap.classList.toggle("pin");
@@ -87,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Click outside closes pinned popups
     document.addEventListener("click", (e) => {
       document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
         if (wrap.contains(e.target)) return;
@@ -106,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     chapterContainer.innerHTML = makeParagraphHTML(page.content);
     enhanceGlossary();
 
-    // Drop cap only on the first page of the chapter
     const wrapper = document.querySelector(".chapter-container");
     if (currentPage === 0) wrapper.classList.add("first-page");
     else wrapper.classList.remove("first-page");
@@ -116,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
     nextButton.disabled = currentPage === pages.length - 1;
   }
 
-  // Load glossary, manifest, and chapter text
   Promise.all([
     fetch("glossary.json").then((r) => (r.ok ? r.json() : {})),
     fetch("chapters/manifest.json").then((r) => (r.ok ? r.json() : [])),
@@ -172,4 +161,3 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
-
