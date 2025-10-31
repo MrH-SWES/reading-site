@@ -17,30 +17,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   function makeParagraphHTML(rawText) {
-    const norm = rawText.replace(/\r/g, "");
+  const norm = rawText.replace(/\r/g, "");
 
-    const parts = norm
-      .split(/(?:\n{2,})|\n(?=\s*[A-Z""'])/g)
-      .map(s =>
-        s
-          .replace(/\s+([,.!?;:])/g, "$1")
-          .replace(/\s+/g, " ")
-          .trim()
-      )
-      .filter(Boolean);
+  const parts = norm
+    .split(/(?:\n{2,})|\n(?=\s*[A-Z""'])/g)
+    .map(s =>
+      s
+        .replace(/\s+([,.!?;:])/g, "$1")
+        .replace(/\s+/g, " ")
+        .trim()
+    )
+    .filter(Boolean);
 
-    return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n\n");
-  }
+  // Process each paragraph separately to prevent cross-paragraph issues
+  return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n\n");
+}
 
   function renderGlossaryInline(text) {
   if (!glossary || !Object.keys(glossary).length) return text;
-
-  // First pass: collect all terms and their definitions WITHOUT any glossary markup
-  const cleanDefinitions = {};
-  for (const term in glossary) {
-    const data = glossary[term];
-    cleanDefinitions[term] = typeof data === "object" ? data.definition : String(data);
-  }
 
   const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
   let processed = text;
@@ -53,27 +47,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (usedTerms.has(original.toLowerCase())) continue;
 
-    const defText = cleanDefinitions[original]; // Use pre-cleaned definition
+    const defText = typeof data === "object" ? data.definition : String(data);
     const imgHtml =
       typeof data === "object" && data.image
         ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
         : "";
 
+    // Create a regex that ONLY matches text that's NOT already inside a glossary span
     const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "i");
 
-    if (regex.test(processed)) {
-      processed = processed.replace(regex, (match) => {
-        const id = `def-${uid++}`;
+    // Split by existing glossary-wrap spans to avoid matching inside them
+    const parts = processed.split(/(<span class="glossary-wrap">[\s\S]*?<\/span><\/span>)/);
+    
+    let foundAndReplaced = false;
+    const newParts = parts.map(part => {
+      // If this part is already a glossary span, don't touch it
+      if (part.startsWith('<span class="glossary-wrap">')) {
+        return part;
+      }
+      
+      // Only replace in the first non-glossary part where we find a match
+      if (!foundAndReplaced && regex.test(part)) {
+        foundAndReplaced = true;
         usedTerms.add(original.toLowerCase());
-        return (
-          `<span class="glossary-wrap">` +
-          `<button type="button" class="glossary-term" aria-describedby="${id}">${match}</button>` +
-          `<span id="${id}" class="glossary-definition" role="status" aria-live="off" aria-atomic="true">` +
-          `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-          `</span></span>`
-        );
-      });
-    }
+        const id = `def-${uid++}`;
+        return part.replace(regex, (match) => {
+          return (
+            `<span class="glossary-wrap">` +
+            `<button type="button" class="glossary-term" aria-describedby="${id}">${match}</button>` +
+            `<span id="${id}" class="glossary-definition" role="status" aria-live="off" aria-atomic="true">` +
+            `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
+            `</span></span>`
+          );
+        });
+      }
+      
+      return part;
+    });
+
+    processed = newParts.join('');
   }
 
   return processed;
@@ -230,4 +242,5 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
 
