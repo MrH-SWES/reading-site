@@ -149,7 +149,7 @@ h1 {
 
 .chapter-content p {
   margin: 1.2em 0;
-  text-indent: 1.5em;
+  text-indent: 0;
   text-align: justify;
   white-space: normal;
 }
@@ -280,5 +280,6 @@ h1 {
     width: 90vw;
   }
 }
+
 
 
