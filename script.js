@@ -33,66 +33,95 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderGlossaryInline(text) {
-  if (!glossary || !Object.keys(glossary).length) return text;
+    if (!glossary || !Object.keys(glossary).length) return text;
 
-  const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
-  let processed = text;
-  let uid = 0;
+    const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
+    let processed = text;
+    let uid = 0;
 
-  for (const original of terms) {
-    const data = glossary[original];
-    if (!data) continue;
+    for (const original of terms) {
+      const data = glossary[original];
+      if (!data) continue;
 
-    const defText = typeof data === "object" ? data.definition : String(data);
-    const imgHtml =
-      typeof data === "object" && data.image
-        ? `<img src="${data.image}" alt="" class="glossary-image" aria-hidden="true">`
-        : "";
+      const defText = typeof data === "object" ? data.definition : String(data);
+      const imgHtml =
+        typeof data === "object" && data.image
+          ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
+          : "";
 
-    const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "gi");
+      const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "gi");
 
-    processed = processed.replace(regex, (match) => {
-      const id = `def-${uid++}`;
-      return (
-        `<span class="glossary-wrap">` +
-        `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" aria-label="${match}">${match}</button>` +
-        `<span id="${id}" class="glossary-definition" role="tooltip" aria-live="polite">` +
-        `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-        `</span></span>`
-      );
-    });
-  }
-
-  return processed;
-}
-
-  function enhanceGlossary() {
-  document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
-    const termBtn = wrap.querySelector(".glossary-term");
-    if (!termBtn) return;
-
-    // Check if near left edge and flip to right if needed
-    const rect = wrap.getBoundingClientRect();
-    if (rect.left < 340) {
-      wrap.classList.add("flip-right");
+      processed = processed.replace(regex, (match) => {
+        const id = `def-${uid++}`;
+        return (
+          `<span class="glossary-wrap">` +
+          `<button type="button" class="glossary-term" aria-describedby="${id}">${match}</button>` +
+          `<span id="${id}" class="glossary-definition" role="status" aria-live="off" aria-atomic="true">` +
+          `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
+          `</span></span>`
+        );
+      });
     }
 
-    termBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const pinned = wrap.classList.toggle("pin");
-      termBtn.setAttribute("aria-expanded", pinned ? "true" : "false");
-    });
-  });
+    return processed;
+  }
 
-  document.addEventListener("click", (e) => {
-    document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
-      if (wrap.contains(e.target)) return;
+  function enhanceGlossary() {
+    document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
       const termBtn = wrap.querySelector(".glossary-term");
-      wrap.classList.remove("pin");
-      if (termBtn) termBtn.setAttribute("aria-expanded", "false");
+      const definition = wrap.querySelector(".glossary-definition");
+      if (!termBtn || !definition) return;
+
+      // Check if near left edge and flip to right if needed
+      const rect = wrap.getBoundingClientRect();
+      if (rect.left < 340) {
+        wrap.classList.add("flip-right");
+      }
+
+      termBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        
+        // Close all other pinned definitions first
+        document.querySelectorAll(".glossary-wrap.pin").forEach((otherWrap) => {
+          if (otherWrap !== wrap) {
+            otherWrap.classList.remove("pin");
+            const otherBtn = otherWrap.querySelector(".glossary-term");
+            const otherDef = otherWrap.querySelector(".glossary-definition");
+            if (otherBtn) otherBtn.setAttribute("aria-expanded", "false");
+            if (otherDef) otherDef.setAttribute("aria-live", "off");
+          }
+        });
+        
+        // Toggle this one
+        const nowPinned = wrap.classList.toggle("pin");
+        termBtn.setAttribute("aria-expanded", nowPinned ? "true" : "false");
+        
+        // Control aria-live to prevent reading background content
+        if (nowPinned) {
+          definition.setAttribute("aria-live", "polite");
+          // Reset after announcement
+          setTimeout(() => {
+            definition.setAttribute("aria-live", "off");
+          }, 100);
+        } else {
+          definition.setAttribute("aria-live", "off");
+        }
+      });
     });
-  });
-}
+
+    // Close all definitions when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".glossary-wrap")) {
+        document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
+          const termBtn = wrap.querySelector(".glossary-term");
+          const definition = wrap.querySelector(".glossary-definition");
+          wrap.classList.remove("pin");
+          if (termBtn) termBtn.setAttribute("aria-expanded", "false");
+          if (definition) definition.setAttribute("aria-live", "off");
+        });
+      }
+    });
+  }
 
   function renderPage() {
     if (!pages.length) return;
@@ -188,4 +217,3 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
-
