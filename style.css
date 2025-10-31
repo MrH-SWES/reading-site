@@ -156,14 +156,25 @@ h1 {
 
 .chapter-content p {
   margin: 0.3em 0;
-  text-indent: 2em;
+  text-indent: 0; /* No indent by default */
   text-align: justify;
   white-space: normal;
 }
 
-/* First paragraph on first page only should not be indented */
-.first-page .chapter-content p:first-of-type {
-  text-indent: 0;
+/* Add indent to all paragraphs except the first */
+.chapter-content p + p {
+  text-indent: 2em;
+}
+
+/* Drop cap only on first paragraph of first page */
+.first-page .chapter-content p:first-of-type::first-letter {
+  float: left;
+  font-size: 4.2rem;
+  line-height: .75;
+  font-weight: 600;
+  margin-right: .4rem;
+  margin-top: .15rem;
+  color: #1f1d18;
 }
 
 /* Drop cap only on first paragraph of first page */
@@ -325,3 +336,4 @@ h1 {
     margin-left: 0;
   }
 }
+
