@@ -14,12 +14,14 @@
     <div id="chapter-content" class="chapter-content"></div>
 
     <div class="nav-buttons">
-      <button id="prev-page">← Prev</button>
-      <button id="next-page">Next →</button>
+      <button id="prev">← Prev</button>
+      <button id="next">Next →</button>
     </div>
   </main>
 
-  <script src="script.js"></script>
   <div id="readside-tooltip-container"></div>
+
+  <!-- move script to the very end so DOM is loaded first -->
+  <script src="script.js"></script>
 </body>
 </html>
