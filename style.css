@@ -11,49 +11,48 @@ body {
   padding: 0;
 }
 
-/* Smooth fade between pages */
 * {
   transition: all 0.3s ease;
 }
 
 /* ===========================
-   INDEX PAGE STYLES
+   INDEX PAGE LAYOUT
    =========================== */
 .index-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  gap: 4rem;
   min-height: 100vh;
+  padding: 4rem 2rem;
   background-color: #f8f4ee;
-  padding: 2rem;
 }
 
+/* ---- LEFT: COVER CARD ---- */
 .book-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
   background: #fffdf8;
   border-radius: 20px;
-  padding: 3rem 3.5rem;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08),
-              0 4px 12px rgba(0, 0, 0, 0.05);
-  max-width: 520px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08),
+              0 3px 10px rgba(0, 0, 0, 0.05);
+  text-align: center;
+  max-width: 400px;
+  flex-shrink: 0;
 }
 
 .book-cover {
   width: 100%;
-  max-width: 320px;
+  max-width: 280px;
   border-radius: 10px;
   margin-bottom: 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .book-title {
   font-weight: 700;
   font-size: 2rem;
   color: #1e1b15;
-  margin: 0.5rem 0 0.25rem 0;
+  margin-bottom: 0.25rem;
 }
 
 .book-author {
@@ -61,38 +60,65 @@ body {
   font-weight: 400;
   color: #6b6b6b;
   font-size: 1.1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .book-subtitle {
   font-size: 1rem;
   color: #555;
+  margin-bottom: 1rem;
+}
+
+/* ---- RIGHT: CONTENTS CARD ---- */
+.contents-card {
+  background: #fffdf8;
+  border-radius: 20px;
+  padding: 2.5rem 3rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08),
+              0 3px 10px rgba(0, 0, 0, 0.05);
+  max-width: 360px;
+  min-width: 320px;
+}
+
+.contents-heading {
+  font-weight: 600;
+  font-size: 1.6rem;
+  text-align: center;
   margin-bottom: 1.5rem;
+  color: #1e1b15;
+  border-bottom: 1px solid #e0d9ca;
+  padding-bottom: 0.5rem;
 }
 
-.chapter-list {
+.contents-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.contents-list li {
+  margin: 0.45rem 0;
+  font-size: 1.05rem;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  width: 100%;
-  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px dotted #ddd2ba;
+  padding-left: 0.5rem;
 }
 
-.chapter-link {
-  display: block;
+.contents-link {
   text-decoration: none;
-  background-color: #f0ebe1;
   color: #3d5a80;
-  font-weight: 500;
-  width: 80%;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  flex-grow: 1;
+  padding-right: 1rem;
 }
 
-.chapter-link:hover {
-  background-color: #e2d7c3;
+.contents-link:hover {
   color: #1e3d5a;
+}
+
+.error {
+  color: #a00;
+  font-style: italic;
 }
 
 /* ===========================
@@ -193,49 +219,68 @@ h1 {
 }
 
 /* ===========================
-   GLOSSARY TERMS
+   GLOSSARY TERMS (accessible)
    =========================== */
 .glossary-term {
   color: #27496d;
   font-weight: 600;
   cursor: pointer;
-  position: relative;
   border-bottom: 1px dotted #5d7fa8;
-  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
 }
 
-.glossary-term:hover {
-  background-color: #e6f0ff;
-  border-bottom-color: #27496d;
-  color: #1e3752;
+.glossary-term:focus {
+  outline: 2px solid #a0c4ff;
 }
 
-.tooltip {
-  position: absolute;
+.glossary-definition {
+  position: relative;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  visibility: hidden;
+  opacity: 0;
+  max-width: 300px;
+  margin-left: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
   background: #fffbe8;
   border: 1px solid #cbb77c;
-  border-radius: 8px;
-  padding: 10px 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   font-size: 0.95rem;
   color: #333;
   line-height: 1.4;
-  max-width: 260px;
-  z-index: 10;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.25s ease;
+}
+
+.glossary-term:hover + .glossary-definition,
+.glossary-term:focus + .glossary-definition {
+  visibility: visible;
+  opacity: 1;
+}
+
+.glossary-definition:not(:hover):not(:focus) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute;
 }
 
 /* ===========================
    RESPONSIVE
    =========================== */
-@media (max-width: 768px) {
-  .book-card {
-    padding: 2rem 1.5rem;
+@media (max-width: 900px) {
+  .index-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
   }
-  .book-cover {
-    max-width: 220px;
-  }
-  .chapter-container {
-    margin: 1.5rem;
-    padding: 1.5rem;
+  .book-card, .contents-card {
+    max-width: 90%;
   }
 }
