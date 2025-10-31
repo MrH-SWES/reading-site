@@ -145,13 +145,13 @@ h1 {
 
 /* === Body Text === */
 .chapter-content {
-  max-width: 720px;
+  max-width: 680px;
   margin: 0 auto;
   color: #2a2722;
   font-size: 1.1rem;
   line-height: 2;
   text-align: justify;
-  hyphens: none;
+  hyphens: auto;
 }
 
 .chapter-content p {
@@ -293,6 +293,7 @@ h1 {
     width: 90vw;
   }
 }
+
 
 
 
