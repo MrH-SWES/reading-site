@@ -86,6 +86,7 @@ body {
 }
 
 .chapter-link {
+  display: block;
   text-decoration: none;
   color: #3d5a80;
   font-weight: 500;
@@ -226,3 +227,4 @@ h1 {
     padding: 1rem 1.5rem;
   }
 }
+
