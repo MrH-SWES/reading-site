@@ -1,8 +1,10 @@
 /* ===========================
    GLOBAL STYLES
    =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
 body {
-  font-family: 'Georgia', serif;
+  font-family: 'Lexend', sans-serif;
   background-color: #f8f4ee;
   margin: 0;
   padding: 0;
@@ -11,7 +13,7 @@ body {
   justify-content: center;
 }
 
-/* Smooth fade between pages */
+/* Smooth transitions */
 * {
   transition: all 0.3s ease;
 }
@@ -29,7 +31,7 @@ body {
   padding: 2rem;
 }
 
-/* Book header card */
+/* Book card section */
 .book-header {
   background: #fffdf8;
   border-radius: 16px;
@@ -43,7 +45,6 @@ body {
   max-width: 500px;
 }
 
-/* Book cover */
 .book-cover {
   width: 100%;
   max-width: 280px;
@@ -51,7 +52,6 @@ body {
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
 }
 
-/* Meta section below cover */
 .book-meta {
   display: flex;
   flex-direction: column;
@@ -59,10 +59,10 @@ body {
 }
 
 .book-title {
-  font-family: 'Georgia', serif;
+  font-weight: 700;
   font-size: 2rem;
   margin-bottom: 0.25rem;
-  color: #2e2e2e;
+  color: #1f1e1a;
 }
 
 .book-author {
@@ -109,14 +109,24 @@ body {
    CHAPTER PAGE STYLES
    =========================== */
 
+body.chapter-page {
+  background-color: #f5f2eb;
+  background-image: radial-gradient(#ebe6da 1px, transparent 1px);
+  background-size: 22px 22px;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
 .chapter-container {
-  background: #fffdf8;
-  margin: 3rem;
-  padding: 2rem 3rem;
-  max-width: 700px;
+  background: #fbf9f4;
+  margin: 2rem auto;
+  padding: 3rem 3.5rem;
+  max-width: 620px;
   width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  border: 1px solid #e3dcca;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12), 0 8px 30px rgba(0,0,0,0.08);
 }
 
 .back-link {
@@ -131,64 +141,96 @@ body {
   text-decoration: underline;
 }
 
-/* Chapter title */
+/* Chapter heading */
 h1 {
   text-align: center;
-  font-size: 2rem;
+  font-weight: 600;
+  font-size: 1.8rem;
   margin-bottom: 0.5rem;
+  color: #1e1b15;
 }
 
-/* Page number display */
+/* Page number */
 .page-number {
   text-align: center;
   font-style: italic;
-  color: #6b6b6b;
+  color: #6a635a;
   margin-bottom: 2rem;
 }
 
-/* Text block formatting */
+/* Main reading area */
 .chapter-content {
-  line-height: 1.8;
-  text-align: justify;
-  white-space: pre-wrap;
+  font-family: 'Lexend', sans-serif;
+  line-height: 1.75;
   font-size: 1.05rem;
+  color: #2a2722;
+  text-align: justify;
+  hyphens: auto;
+  white-space: pre-wrap;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+/* Drop cap for first paragraph */
+.chapter-content p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.5rem;
+  line-height: 0.85;
+  font-weight: 600;
+  margin-right: 0.25rem;
+  color: #1f1d18;
+}
+
+/* Indentation for following paragraphs */
+.chapter-content p + p {
+  text-indent: 1.5em;
+  margin-top: 0.75em;
 }
 
 /* Pagination buttons */
 .nav-buttons {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 2.5rem;
   gap: 1rem;
 }
 
 .nav-button {
-  background-color: #e7dcc8;
-  border: none;
+  background-color: #ece3cf;
+  border: 1px solid #d5c7aa;
   padding: 0.5rem 1.5rem;
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
-  color: #2e2e2e;
+  color: #2e2a23;
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
 
 .nav-button:hover {
-  background-color: #d3c2a8;
+  background-color: #dfd4b8;
 }
 
 /* ===========================
-   GLOSSARY TOOLTIPS
+   GLOSSARY TERMS
    =========================== */
 
 .glossary-term {
-  color: #2a5d8f;
-  font-weight: 500;
+  color: #27496d;               /* deep ink blue */
+  font-weight: 600;
   cursor: pointer;
   position: relative;
+  border-bottom: 1px dotted #5d7fa8;  /* subtle underline */
+  text-decoration: none;
 }
 
+.glossary-term:hover {
+  background-color: #e6f0ff;    /* pale blue hover */
+  border-bottom-color: #27496d;
+  color: #1e3752;
+}
+
+/* Tooltip styling */
 .tooltip {
   position: absolute;
   background: #fffbe8;
