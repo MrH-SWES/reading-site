@@ -76,9 +76,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function enhanceGlossary() {
   const popupContainer = document.getElementById('glossary-popup-container');
-  if (!popupContainer) return;
+  if (!popupContainer) {
+    console.error('Popup container not found!');
+    return;
+  }
 
   let activePopup = null;
+  let activeTerm = null;
 
   document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
     const termText = wrap.textContent;
@@ -105,6 +109,7 @@ function enhanceGlossary() {
       if (activePopup) {
         activePopup.remove();
         activePopup = null;
+        if (activeTerm) activeTerm.classList.remove('active');
       }
 
       // Create popup in the separate container
@@ -120,37 +125,65 @@ function enhanceGlossary() {
         </div>
       `;
 
-      // Position the popup relative to the term
-      const rect = wrap.getBoundingClientRect();
-      popup.style.position = 'fixed';
+      // Add to container first (invisible)
+      popup.style.visibility = 'hidden';
+      popupContainer.appendChild(popup);
+
+      // Calculate position after it's in the DOM
+      const termRect = wrap.getBoundingClientRect();
+      const popupRect = popup.getBoundingClientRect();
       
-      // Try to position on the left
-      if (rect.left > 320) {
-        popup.style.right = `${window.innerWidth - rect.left + 15}px`;
-        popup.style.top = `${rect.top}px`;
-      } else {
-        // If too close to left edge, position on the right
-        popup.style.left = `${rect.right + 15}px`;
-        popup.style.top = `${rect.top}px`;
+      // Position on the left side of the term
+      let left = termRect.left - popupRect.width - 15;
+      let top = termRect.top + window.scrollY;
+      
+      // If too close to left edge, position on the right instead
+      if (left < 10) {
+        left = termRect.right + 15;
+        popup.classList.add('right-side');
+      }
+      
+      // Make sure it doesn't go off the top
+      if (top < 10) {
+        top = 10;
+      }
+      
+      // Make sure it doesn't go off the bottom
+      const maxTop = window.innerHeight - popupRect.height - 10;
+      if (top > maxTop) {
+        top = maxTop;
       }
 
-      popupContainer.appendChild(popup);
+      popup.style.position = 'fixed';
+      popup.style.left = `${left}px`;
+      popup.style.top = `${termRect.top}px`;
+      popup.style.visibility = 'visible';
+
       activePopup = popup;
+      activeTerm = wrap;
 
       // Highlight the term
       wrap.classList.add('active');
 
       // Close button functionality
       const closeBtn = popup.querySelector('.glossary-popup-close');
-      closeBtn.addEventListener('click', () => {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         popup.remove();
         activePopup = null;
         wrap.classList.remove('active');
+        activeTerm = null;
         wrap.focus();
       });
 
+      // Announce to screen reader
+      popupContainer.setAttribute('aria-live', 'assertive');
+      setTimeout(() => {
+        popupContainer.setAttribute('aria-live', 'polite');
+      }, 100);
+
       // Focus the close button for accessibility
-      closeBtn.focus();
+      setTimeout(() => closeBtn.focus(), 50);
     };
 
     wrap.addEventListener('click', showPopup);
@@ -165,22 +198,24 @@ function enhanceGlossary() {
   // Close popup when clicking outside
   document.addEventListener('click', (e) => {
     if (activePopup && !e.target.closest('.glossary-popup') && !e.target.closest('.glossary-wrap')) {
-      const activeTerm = document.querySelector('.glossary-wrap.active');
       activePopup.remove();
       activePopup = null;
-      if (activeTerm) activeTerm.classList.remove('active');
+      if (activeTerm) {
+        activeTerm.classList.remove('active');
+        activeTerm = null;
+      }
     }
   });
 
   // Close popup on Escape key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && activePopup) {
-      const activeTerm = document.querySelector('.glossary-wrap.active');
       activePopup.remove();
       activePopup = null;
       if (activeTerm) {
         activeTerm.classList.remove('active');
         activeTerm.focus();
+        activeTerm = null;
       }
     }
   });
@@ -280,6 +315,7 @@ function enhanceGlossary() {
       console.error(err);
     });
 });
+
 
 
 
