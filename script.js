@@ -33,60 +33,66 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderGlossaryInline(text) {
-    if (!glossary || !Object.keys(glossary).length) return text;
+  if (!glossary || !Object.keys(glossary).length) return text;
 
-    const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
-    let processed = text;
-    let uid = 0;
+  const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
+  let processed = text;
+  let uid = 0;
 
-    for (const original of terms) {
-      const data = glossary[original];
-      if (!data) continue;
+  for (const original of terms) {
+    const data = glossary[original];
+    if (!data) continue;
 
-      const defText = typeof data === "object" ? data.definition : String(data);
-      const imgHtml =
-        typeof data === "object" && data.image
-          ? `<img src="${data.image}" alt="Image for ${original}" class="glossary-image">`
-          : "";
+    const defText = typeof data === "object" ? data.definition : String(data);
+    const imgHtml =
+      typeof data === "object" && data.image
+        ? `<img src="${data.image}" alt="" class="glossary-image" aria-hidden="true">`
+        : "";
 
-      const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "gi");
+    const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "gi");
 
-      processed = processed.replace(regex, (match) => {
-        const id = `def-${uid++}`;
-        return (
-          `<span class="glossary-wrap">` +
-          `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" data-term="${original}">${match}</button>` +
-          `<span id="${id}" class="glossary-definition" role="note">` +
-          `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-          `</span></span>`
-        );
-      });
-    }
-
-    return processed;
+    processed = processed.replace(regex, (match) => {
+      const id = `def-${uid++}`;
+      return (
+        `<span class="glossary-wrap">` +
+        `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" aria-label="${match}">${match}</button>` +
+        `<span id="${id}" class="glossary-definition" role="tooltip" aria-live="polite">` +
+        `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
+        `</span></span>`
+      );
+    });
   }
+
+  return processed;
+}
 
   function enhanceGlossary() {
-    document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
+  document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
+    const termBtn = wrap.querySelector(".glossary-term");
+    if (!termBtn) return;
+
+    // Check if near left edge and flip to right if needed
+    const rect = wrap.getBoundingClientRect();
+    if (rect.left < 340) {
+      wrap.classList.add("flip-right");
+    }
+
+    termBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const pinned = wrap.classList.toggle("pin");
+      termBtn.setAttribute("aria-expanded", pinned ? "true" : "false");
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
+      if (wrap.contains(e.target)) return;
       const termBtn = wrap.querySelector(".glossary-term");
-      if (!termBtn) return;
-
-      termBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        const pinned = wrap.classList.toggle("pin");
-        termBtn.setAttribute("aria-expanded", pinned ? "true" : "false");
-      });
+      wrap.classList.remove("pin");
+      if (termBtn) termBtn.setAttribute("aria-expanded", "false");
     });
-
-    document.addEventListener("click", (e) => {
-      document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
-        if (wrap.contains(e.target)) return;
-        const termBtn = wrap.querySelector(".glossary-term");
-        wrap.classList.remove("pin");
-        if (termBtn) termBtn.setAttribute("aria-expanded", "false");
-      });
-    });
-  }
+  });
+}
 
   function renderPage() {
     if (!pages.length) return;
@@ -182,3 +188,4 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
