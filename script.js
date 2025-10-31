@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const nextButton = document.getElementById("next");
   const chapterTitleEl = document.getElementById("chapter-title");
 
-  // Only run on chapter.html
   if (!chapterContainer) return;
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -16,28 +15,25 @@ document.addEventListener("DOMContentLoaded", () => {
   let pages = [];
   let currentPage = 0;
 
-  // ---------- Helpers ----------
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  // Split into paragraph blocks by 2+ newlines; inside each block collapse
-  // single newlines to spaces so we don't create fake paragraph gaps or extra spaces.
+  // Split into paragraph blocks by:
+  //  - 2+ newlines (true blank line), OR
+  //  - a SINGLE newline where the next char starts a new paragraph (capital letter or opening quote).
+  // Then, inside each paragraph, collapse any remaining newlines/spaces to single spaces.
   function makeParagraphHTML(rawText) {
-    const blocks = rawText
-      .replace(/\r/g, "")
-      .split(/\n{2,}/); // paragraphs are separated by blank lines (2+ newlines)
+    const norm = rawText.replace(/\r/g, "");
+    const parts = norm
+      .split(/(?:\n{2,})|\n(?=[A-Z“"'])/g)
+      .map(s => s.replace(/\s+/g, " ").trim())
+      .filter(Boolean);
 
-    return blocks
-      .map((b) => b.replace(/\n+/g, " ").replace(/\s+/g, " ").trim())
-      .filter(Boolean)
-      .map((clean) => `<p>${renderGlossaryInline(clean)}</p>`)
-      .join("\n");
+    return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n");
   }
 
-  // Replace glossary terms inline with accessible markup (no flicker).
   function renderGlossaryInline(text) {
     if (!glossary || !Object.keys(glossary).length) return text;
 
-    // Longest-first to avoid partial overlaps
     const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
     let processed = text;
     let uid = 0;
@@ -45,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (const original of terms) {
       const data = glossary[original];
       if (!data) continue;
+
       const defText = typeof data === "object" ? data.definition : String(data);
       const imgHtml =
         typeof data === "object" && data.image
@@ -57,23 +54,23 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = `def-${uid++}`;
         return (
           `<span class="glossary-wrap">` +
-          `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" data-term="${original}">${match}</button>` +
-          `<span id="${id}" class="glossary-definition" role="note">` +
-          `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
-          `</span></span>`
+            `<button type="button" class="glossary-term" aria-expanded="false" aria-controls="${id}" data-term="${original}">${match}</button>` +
+            `<span id="${id}" class="glossary-definition" role="note">` +
+              `<span class="glossary-definition-text">${defText}</span>${imgHtml}` +
+            `</span>` +
+          `</span>`
         );
       });
     }
-
     return processed;
   }
 
   function enhanceGlossary() {
-    // click-to-pin; hover is handled by CSS
     document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
       const termBtn = wrap.querySelector(".glossary-term");
       if (!termBtn) return;
 
+      // Click toggles pin so students can select text for TTS
       termBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         const pinned = wrap.classList.toggle("pin");
@@ -81,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // click outside closes pinned bubbles
+    // Click outside closes pinned popups
     document.addEventListener("click", (e) => {
       document.querySelectorAll(".glossary-wrap.pin").forEach((wrap) => {
         if (wrap.contains(e.target)) return;
@@ -100,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chapterContainer.innerHTML = makeParagraphHTML(page.content);
     enhanceGlossary();
 
-    // drop cap only on first page of the chapter
+    // Drop cap only on the first page of the chapter
     const wrapper = document.querySelector(".chapter-container");
     if (currentPage === 0) wrapper.classList.add("first-page");
     else wrapper.classList.remove("first-page");
@@ -110,7 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nextButton.disabled = currentPage === pages.length - 1;
   }
 
-  // ---------- Load all data then render ----------
+  // Load glossary, manifest, and chapter text
   Promise.all([
     fetch("glossary.json").then((r) => (r.ok ? r.json() : {})),
     fetch("chapters/manifest.json").then((r) => (r.ok ? r.json() : [])),
@@ -128,7 +125,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (chapterInfo && chapterTitleEl)
         chapterTitleEl.textContent = chapterInfo.title || "Chapter";
 
-      // Parse page blocks [startPage=N] ... [endPage=N]
       const pageRegex = /\[startPage=(\d+)\]([\s\S]*?)\[endPage=\1\]/g;
       let m;
       while ((m = pageRegex.exec(chapterText)) !== null) {
@@ -141,7 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      currentPage = parseInt(localStorage.getItem(`page-${chapterFile}`), 10) || 0;
+      currentPage =
+        parseInt(localStorage.getItem(`page-${chapterFile}`), 10) || 0;
       if (currentPage >= pages.length) currentPage = 0;
 
       prevButton.addEventListener("click", () => {
