@@ -129,11 +129,18 @@ h1 {
   color: #1e1b15;
 }
 
+/* Hide chapter title after first page */
+.chapter-container:not(.first-page) h1 {
+  display: none;
+}
+
 .page-number {
   text-align: center;
   font-style: italic;
   color: #6a635a;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0;
+  margin-top: 2rem;
+  order: 999;
 }
 
 /* === Body Text === */
@@ -148,7 +155,7 @@ h1 {
 }
 
 .chapter-content p {
-  margin: 1.5em 0;
+  margin: 0.3em 0;
   text-indent: 2em;
   text-align: justify;
   white-space: normal;
