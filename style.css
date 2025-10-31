@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
 
 /* ===========================
-   GLOBAL STYLES
+   GLOBAL
    =========================== */
 body {
   font-family: 'Lexend', sans-serif;
@@ -11,12 +11,10 @@ body {
   padding: 0;
 }
 
-* {
-  transition: all 0.3s ease;
-}
+* { transition: all 0.3s ease; }
 
 /* ===========================
-   INDEX PAGE LAYOUT
+   INDEX PAGE
    =========================== */
 .index-container {
   display: flex;
@@ -28,7 +26,6 @@ body {
   background-color: #f8f4ee;
 }
 
-/* ---- LEFT: COVER CARD ---- */
 .book-card {
   background: #fffdf8;
   border-radius: 20px;
@@ -69,7 +66,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* ---- RIGHT: CONTENTS CARD ---- */
 .contents-card {
   background: #fffdf8;
   border-radius: 20px;
@@ -99,8 +95,6 @@ body {
 .contents-list li {
   margin: 0.45rem 0;
   font-size: 1.05rem;
-  display: flex;
-  justify-content: flex-start;
   border-bottom: 1px dotted #ddd2ba;
   padding-left: 0.5rem;
 }
@@ -108,21 +102,14 @@ body {
 .contents-link {
   text-decoration: none;
   color: #3d5a80;
-  flex-grow: 1;
-  padding-right: 1rem;
+  display: inline-block;
+  width: 100%;
 }
 
-.contents-link:hover {
-  color: #1e3d5a;
-}
-
-.error {
-  color: #a00;
-  font-style: italic;
-}
+.contents-link:hover { color: #1e3d5a; }
 
 /* ===========================
-   CHAPTER PAGE STYLES
+   CHAPTER PAGE
    =========================== */
 body.chapter-page {
   background-color: #f5f2eb;
@@ -150,10 +137,7 @@ body.chapter-page {
   font-weight: 600;
   text-decoration: none;
 }
-
-.back-link:hover {
-  text-decoration: underline;
-}
+.back-link:hover { text-decoration: underline; }
 
 h1 {
   text-align: center;
@@ -213,14 +197,16 @@ h1 {
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
-
-.nav-button:hover {
-  background-color: #dfd4b8;
-}
+.nav-button:hover { background-color: #dfd4b8; }
 
 /* ===========================
-   GLOSSARY TERMS (accessible)
+   GLOSSARY (TO THE RIGHT)
    =========================== */
+.glossary-wrap {
+  position: relative;
+  display: inline-block;
+}
+
 .glossary-term {
   color: #27496d;
   font-weight: 600;
@@ -230,45 +216,52 @@ h1 {
   border: none;
   padding: 0;
   font-family: inherit;
+  line-height: 1.1;
 }
-
 .glossary-term:focus {
   outline: 2px solid #a0c4ff;
+  outline-offset: 1px;
 }
 
 .glossary-definition {
-  position: relative;
-  left: 0;
+  position: absolute;
+  left: 100%;
   top: 0;
-  display: inline-block;
+  margin-left: 8px;
+  z-index: 20;
   visibility: hidden;
   opacity: 0;
-  max-width: 300px;
-  margin-left: 6px;
-  padding: 8px 10px;
-  border-radius: 8px;
+  pointer-events: auto;
+  max-width: 320px;
   background: #fffbe8;
   border: 1px solid #cbb77c;
+  border-radius: 8px;
+  padding: 10px 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  font-size: 0.95rem;
   color: #333;
+  font-size: 0.95rem;
   line-height: 1.4;
-  transition: opacity 0.25s ease;
+  transition: opacity 120ms ease;
+}
+.glossary-image {
+  display: block;
+  width: 100%;
+  max-width: 200px;
+  margin-top: 8px;
+  border-radius: 4px;
 }
 
-.glossary-term:hover + .glossary-definition,
+.glossary-wrap:hover .glossary-definition,
+.glossary-wrap.pin .glossary-definition,
 .glossary-term:focus + .glossary-definition {
   visibility: visible;
   opacity: 1;
 }
-
-.glossary-definition:not(:hover):not(:focus) {
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-  position: absolute;
+.glossary-wrap:hover .glossary-term,
+.glossary-wrap.pin .glossary-term {
+  background-color: #e6f0ff;
+  color: #1e3752;
+  border-bottom-color: #27496d;
 }
 
 /* ===========================
@@ -280,7 +273,5 @@ h1 {
     align-items: center;
     gap: 2rem;
   }
-  .book-card, .contents-card {
-    max-width: 90%;
-  }
+  .book-card, .contents-card { max-width: 90%; }
 }
