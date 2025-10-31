@@ -1,38 +1,116 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const container = document.getElementById("content-area");
+  container.innerHTML = `<h1>Teacher Editor</h1><p>Loading existing data...</p>`;
+
+  const chEdit = document.createElement("div");
+  const output = document.createElement("div");
+  const glossaryText = document.createElement("textarea");
+  const glossaryImages = document.createElement("textarea");
+  const chapters = [];
+
+  // Try to load manifest + glossary
+  let manifest = [];
+  let glossary = {};
+
+  try {
+    const mRes = await fetch("chapters/manifest.json");
+    if (mRes.ok) manifest = await mRes.json();
+  } catch (err) {
+    console.warn("No manifest found, starting fresh");
+  }
+
+  try {
+    const gRes = await fetch("glossary.json");
+    if (gRes.ok) glossary = await gRes.json();
+  } catch (err) {
+    console.warn("No glossary found, starting fresh");
+  }
+
+  // Build UI structure
   container.innerHTML = `
     <h1>Teacher Editor</h1>
 
     <section class="chapter-editor">
-      <h2>Add New Chapters</h2>
+      <h2>Chapters</h2>
       <div id="chapter-editor"></div>
       <button id="add-chapter">Add Chapter</button>
     </section>
 
     <section class="glossary-editor">
-      <h2>Glossary (bulk input)</h2>
-      <p>Paste terms and definitions, one per line as <code>term: definition</code>.</p>
-      <textarea id="glossary-text" rows="8" placeholder="cattail: tall wetland plant used for mats"></textarea>
-      
+      <h2>Glossary</h2>
+      <p>Edit or add terms: one per line as <code>term: definition</code>.</p>
+      <textarea id="glossary-text" rows="10"></textarea>
+
       <p>Optional image URLs (same format):</p>
-      <textarea id="glossary-images" rows="5" placeholder="cattail: https://example.com/image.jpg"></textarea>
-      <button id="save-glossary">Preview Glossary JSON</button>
+      <textarea id="glossary-images" rows="5"></textarea>
     </section>
 
     <section class="export-section">
-      <button id="generate-files">Generate Files</button>
+      <button id="generate-files">Generate Updated Files</button>
     </section>
 
     <div id="output-area"></div>
   `;
 
-  const chEdit = document.getElementById("chapter-editor");
-  const glossaryText = document.getElementById("glossary-text");
-  const glossaryImages = document.getElementById("glossary-images");
-  const output = document.getElementById("output-area");
-  const chapters = [];
+  // Reference elements again
+  const chContainer = document.getElementById("chapter-editor");
+  const outDiv = document.getElementById("output-area");
+  const glossaryDefEl = document.getElementById("glossary-text");
+  const glossaryImgEl = document.getElementById("glossary-images");
 
-  // --- Add new chapter panel ---
+  // --- Load chapters from manifest ---
+  if (manifest.length > 0) {
+    for (const ch of manifest) {
+      let text = "";
+      try {
+        const res = await fetch(`chapters/${ch.file}`);
+        if (res.ok) text = await res.text();
+      } catch (e) {
+        console.warn(`Could not load ${ch.file}`);
+      }
+
+      const div = document.createElement("div");
+      div.classList.add("chapter-card");
+      div.innerHTML = `
+        <label>Chapter ${ch.number || ""} Title:</label>
+        <input type="text" value="${ch.title || ""}">
+        <label>Chapter Text:</label>
+        <textarea rows="10">${text.trim()}</textarea>
+      `;
+      chContainer.appendChild(div);
+      chapters.push(div);
+    }
+  } else {
+    // If no manifest exists yet
+    const div = document.createElement("div");
+    div.classList.add("chapter-card");
+    div.innerHTML = `
+      <label>Chapter 1 Title:</label>
+      <input type="text" placeholder="Chapter 1 title (optional)">
+      <label>Chapter Text:</label>
+      <textarea rows="10" placeholder="[startPage=1] ... [endPage=1]"></textarea>
+    `;
+    chContainer.appendChild(div);
+    chapters.push(div);
+  }
+
+  // --- Load glossary into textareas ---
+  if (Object.keys(glossary).length > 0) {
+    const defs = [];
+    const imgs = [];
+    for (const [term, data] of Object.entries(glossary)) {
+      if (typeof data === "object") {
+        defs.push(`${term}: ${data.definition}`);
+        if (data.image) imgs.push(`${term}: ${data.image}`);
+      } else {
+        defs.push(`${term}: ${data}`);
+      }
+    }
+    glossaryDefEl.value = defs.join("\n");
+    glossaryImgEl.value = imgs.join("\n");
+  }
+
+  // --- Add Chapter button ---
   document.getElementById("add-chapter").onclick = () => {
     const index = chapters.length + 1;
     const div = document.createElement("div");
@@ -41,39 +119,34 @@ document.addEventListener("DOMContentLoaded", () => {
       <label>Chapter ${index} Title:</label>
       <input type="text" placeholder="Chapter ${index} title (optional)">
       <label>Chapter Text:</label>
-      <textarea rows="10" placeholder="[startPage=1] ... [endPage=1]"></textarea>
+      <textarea rows="10" placeholder="[startPage=${index}] ... [endPage=${index}]"></textarea>
     `;
-    chEdit.appendChild(div);
+    chContainer.appendChild(div);
     chapters.push(div);
   };
 
-  // --- Preview glossary JSON ---
-  document.getElementById("save-glossary").onclick = () => {
-    const glossaryObj = buildGlossary(glossaryText.value, glossaryImages.value);
-    const data = JSON.stringify(glossaryObj, null, 2);
-    outputFile("glossary.json", data, output);
-  };
-
-  // --- Generate all output files ---
+  // --- Generate Updated Files ---
   document.getElementById("generate-files").onclick = () => {
-    output.innerHTML = "";
-    const glossaryObj = buildGlossary(glossaryText.value, glossaryImages.value);
-    outputFile("glossary.json", JSON.stringify(glossaryObj, null, 2), output);
+    outDiv.innerHTML = "";
 
-    const manifest = [];
+    // Parse glossary data
+    const glossaryObj = buildGlossary(glossaryDefEl.value, glossaryImgEl.value);
+    outputFile("glossary.json", JSON.stringify(glossaryObj, null, 2), outDiv);
+
+    // Collect chapter data
+    const newManifest = [];
     chapters.forEach((div, i) => {
       const [titleInput, textArea] = div.querySelectorAll("input, textarea");
       const title = titleInput.value.trim() || `Chapter ${i + 1}`;
       const filename = `chapter${i + 1}.txt`;
-      manifest.push({ number: i + 1, title, file: filename });
-      outputFile(`chapters/${filename}`, textArea.value.trim(), output);
+      newManifest.push({ number: i + 1, title, file: filename });
+      outputFile(`chapters/${filename}`, textArea.value.trim(), outDiv);
     });
 
-    const manifestData = JSON.stringify(manifest, null, 2);
-    outputFile("chapters/manifest.json", manifestData, output);
+    outputFile("chapters/manifest.json", JSON.stringify(newManifest, null, 2), outDiv);
 
-    // Build index.html dynamically
-    const links = manifest
+    // Build index.html
+    const links = newManifest
       .map((c, i) => `<a href="chapter.html?chapter=${c.file}">Chapter ${i + 1}: ${c.title}</a>`)
       .join("\n  ");
 
@@ -101,16 +174,14 @@ document.addEventListener("DOMContentLoaded", () => {
 </body>
 </html>`;
 
-    outputFile("index.html", indexTemplate.trim(), output);
+    outputFile("index.html", indexTemplate.trim(), outDiv);
   };
 
-  // --- Helpers ---
+  // --- Helper: build glossary object ---
   function buildGlossary(defText, imgText) {
     const glossaryObj = {};
 
-    // Parse definitions
-    defText
-      .split("\n")
+    defText.split("\n")
       .map(l => l.trim())
       .filter(Boolean)
       .forEach(line => {
@@ -119,9 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
           glossaryObj[term.trim()] = { definition: rest.join(":").trim() };
       });
 
-    // Parse optional images
-    imgText
-      .split("\n")
+    imgText.split("\n")
       .map(l => l.trim())
       .filter(Boolean)
       .forEach(line => {
@@ -135,6 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return glossaryObj;
   }
 
+  // --- Helper: output file panels ---
   function outputFile(filename, content, container) {
     const div = document.createElement("div");
     div.classList.add("editor-panel");
