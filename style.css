@@ -195,10 +195,16 @@ h1 {
   border-bottom: 1px dotted #5d7fa8;
   background: none;
   border: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
   padding: 0;
   margin: 0 1px;
   font-family: inherit;
+  font-size: inherit;
   line-height: inherit;
+  vertical-align: baseline;
+  display: inline;
 }
 .glossary-term:focus {
   outline: 2px solid #a0c4ff;
