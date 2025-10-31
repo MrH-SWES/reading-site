@@ -141,26 +141,32 @@ h1 {
   max-width: 580px;
   margin: 0 auto;
   color: #2a2722;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  font-size: 1.15rem;
+  line-height: 2;
   text-align: justify;
   hyphens: auto;
 }
 
 .chapter-content p {
-  margin: 1.2em 0;
-  text-indent: 0;
+  margin: 1.5em 0;
+  text-indent: 2em;
   text-align: justify;
   white-space: normal;
+}
+
+/* First paragraph should not be indented */
+.first-page .chapter-content p:first-of-type {
+  text-indent: 0;
 }
 
 /* Drop cap only on first paragraph of first page */
 .first-page .chapter-content p:first-of-type::first-letter {
   float: left;
-  font-size: 3.5rem;
-  line-height: .85;
+  font-size: 4.2rem;
+  line-height: .75;
   font-weight: 600;
-  margin-right: .25rem;
+  margin-right: .4rem;
+  margin-top: .15rem;
   color: #1f1d18;
 }
 
@@ -280,6 +286,3 @@ h1 {
     width: 90vw;
   }
 }
-
-
-
