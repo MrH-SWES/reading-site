@@ -17,23 +17,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   function makeParagraphHTML(rawText) {
-    const norm = rawText.replace(/\r/g, "");
-    const parts = norm
-      // Split on blank line or newline followed by capital/quote
-      .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
-      .map(s =>
-        s
-          .replace(/\s+(?=<)/g, " ") // preserve space before glossary tags
-          .replace(/\s+/g, " ")
-          .replace(/\s+([,.!?;:])/g, "$1") // clean punctuation
-          .replace(/([“"'])\s+/g, "$1") // tighten after quotes
-          .replace(/^\s+/, "") // only trim the *start* once
-          .replace(/\s+$/, "") // but keep the space before first word intact
-      )
-      .filter(Boolean);
+  const norm = rawText.replace(/\r/g, "");
+  const parts = norm
+    // Split on blank lines or newline followed by capital or quote
+    .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
+    .map(s =>
+      s
+        .replace(/\s+/g, " ")               // collapse all whitespace
+        .replace(/\s+([,.!?;:])/g, "$1")    // clean punctuation spacing
+        .trim()                             // trim edges cleanly
+    )
+    .filter(Boolean);
 
-    return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n");
-  }
+  // Join with a deliberate normal space before <p> so the browser never inserts &nbsp;
+  return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join(" ");
+}
+
 
 
   function renderGlossaryInline(text) {
@@ -164,4 +163,5 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
 
