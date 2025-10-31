@@ -19,6 +19,7 @@ body {
 /* ===========================
    INDEX PAGE STYLES
    =========================== */
+
 .index-container {
   display: flex;
   justify-content: center;
@@ -28,66 +29,78 @@ body {
   padding: 2rem;
 }
 
-/* Main book card */
-.book-card {
+/* Book header card */
+.book-header {
   background: #fffdf8;
-  padding: 2.5rem 3rem;
   border-radius: 16px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  max-width: 480px;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
   text-align: center;
+  max-width: 500px;
 }
 
-/* Book cover image */
+/* Book cover */
 .book-cover {
   width: 100%;
-  max-width: 320px;
-  height: auto;
+  max-width: 280px;
   border-radius: 10px;
-  margin: 0 auto 1.5rem auto;
-  display: block;
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.15);
 }
 
-/* Book title, author, and subtitle */
+/* Meta section below cover */
+.book-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .book-title {
   font-family: 'Georgia', serif;
   font-size: 2rem;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.25rem;
+  color: #2e2e2e;
 }
 
 .book-author {
   font-style: italic;
   font-size: 1.1rem;
   color: #6b6b6b;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .book-subtitle {
   font-size: 1rem;
-  margin-bottom: 1.5rem;
-  color: #444;
+  color: #4b4b4b;
+  margin-bottom: 1rem;
 }
 
 /* Chapter links */
 .chapter-list {
+  margin-top: 2rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  align-items: center;
 }
 
-.chapter-list a {
-  display: block; /* Ensures proper stacking */
+.chapter-link {
+  display: block;
   text-decoration: none;
   color: #3d5a80;
-  font-weight: 500;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
   background-color: #f0ebe1;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  width: 80%;
+  text-align: center;
   transition: all 0.2s ease;
 }
 
-.chapter-list a:hover {
+.chapter-link:hover {
   background-color: #e2d7c3;
   color: #1e3d5a;
 }
@@ -95,6 +108,7 @@ body {
 /* ===========================
    CHAPTER PAGE STYLES
    =========================== */
+
 .chapter-container {
   background: #fffdf8;
   margin: 3rem;
@@ -165,8 +179,9 @@ h1 {
 }
 
 /* ===========================
-   GLOSSARY STYLES
+   GLOSSARY TOOLTIPS
    =========================== */
+
 .glossary-term {
   color: #2a5d8f;
   font-weight: 500;
@@ -189,62 +204,6 @@ h1 {
 }
 
 /* ===========================
-   EDITOR PAGE STYLES
-   =========================== */
-.editor-container {
-  background: #fffdf8;
-  margin: 2rem;
-  padding: 2rem 3rem;
-  max-width: 800px;
-  width: 100%;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
-.editor-container h1 {
-  text-align: center;
-  margin-bottom: 2rem;
-}
-
-section {
-  margin-bottom: 2rem;
-}
-
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-}
-
-input,
-textarea {
-  width: 100%;
-  font-family: inherit;
-  font-size: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-  margin-bottom: 1rem;
-}
-
-button {
-  background-color: #e7dcc8;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #2e2e2e;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #d3c2a8;
-}
-
-/* ===========================
    RESPONSIVE DESIGN
    =========================== */
 @media (max-width: 768px) {
@@ -253,16 +212,11 @@ button:hover {
     padding: 1.5rem;
   }
 
-  .book-card {
+  .book-header {
     padding: 2rem 1.5rem;
   }
 
   .book-cover {
-    max-width: 240px;
-  }
-
-  .editor-container {
-    margin: 1rem;
-    padding: 1.5rem;
+    max-width: 220px;
   }
 }
