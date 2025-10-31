@@ -145,7 +145,7 @@ h1 {
 
 /* === Body Text === */
 .chapter-content {
-  max-width: 580px;
+  max-width: 600px;
   margin: 0 auto;
   color: #2a2722;
   font-size: 1.15rem;
@@ -293,3 +293,4 @@ h1 {
     width: 90vw;
   }
 }
+
