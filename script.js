@@ -33,26 +33,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function renderGlossaryInline(text) {
-    if (!glossary || !Object.keys(glossary).length) return text;
+  if (!glossary || !Object.keys(glossary).length) return text;
 
-    const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
-    let processed = text;
-    let uid = 0;
+  // First pass: collect all terms and their definitions WITHOUT any glossary markup
+  const cleanDefinitions = {};
+  for (const term in glossary) {
+    const data = glossary[term];
+    cleanDefinitions[term] = typeof data === "object" ? data.definition : String(data);
+  }
 
-    for (const original of terms) {
-      const data = glossary[original];
-      if (!data) continue;
+  const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
+  let processed = text;
+  let uid = 0;
+  const usedTerms = new Set();
 
-      const defText = typeof data === "object" ? data.definition : String(data);
-      const imgHtml =
-        typeof data === "object" && data.image
-          ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
-          : "";
+  for (const original of terms) {
+    const data = glossary[original];
+    if (!data) continue;
 
-      const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "gi");
+    if (usedTerms.has(original.toLowerCase())) continue;
 
+    const defText = cleanDefinitions[original]; // Use pre-cleaned definition
+    const imgHtml =
+      typeof data === "object" && data.image
+        ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
+        : "";
+
+    const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "i");
+
+    if (regex.test(processed)) {
       processed = processed.replace(regex, (match) => {
         const id = `def-${uid++}`;
+        usedTerms.add(original.toLowerCase());
         return (
           `<span class="glossary-wrap">` +
           `<button type="button" class="glossary-term" aria-describedby="${id}">${match}</button>` +
@@ -62,9 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       });
     }
-
-    return processed;
   }
+
+  return processed;
+}
 
   function enhanceGlossary() {
     document.querySelectorAll(".glossary-wrap").forEach((wrap) => {
@@ -217,3 +230,4 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
+
