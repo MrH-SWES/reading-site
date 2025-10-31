@@ -3,6 +3,8 @@
 /* ===========================
    GLOBAL
    =========================== */
+* { box-sizing: border-box; transition: all 0.2s ease; }
+
 body {
   font-family: 'Lexend', sans-serif;
   background-color: #f8f4ee;
@@ -11,13 +13,8 @@ body {
   padding: 0;
 }
 
-* {
-  transition: all 0.2s ease;
-  box-sizing: border-box;
-}
-
 /* ===========================
-   INDEX PAGE
+   INDEX PAGE (unchanged look)
    =========================== */
 .index-container {
   display: flex;
@@ -89,12 +86,7 @@ body {
   padding-bottom: 0.5rem;
 }
 
-.contents-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
+.contents-list { list-style: none; padding: 0; margin: 0; }
 .contents-list li {
   margin: 0.45rem 0;
   font-size: 1.05rem;
@@ -102,16 +94,8 @@ body {
   padding-left: 0.5rem;
 }
 
-.contents-link {
-  text-decoration: none;
-  color: #3d5a80;
-  display: inline-block;
-  width: 100%;
-}
-
-.contents-link:hover {
-  color: #1e3d5a;
-}
+.contents-link { text-decoration: none; color: #3d5a80; display: inline-block; width: 100%; }
+.contents-link:hover { color: #1e3d5a; }
 
 /* ===========================
    CHAPTER PAGE
@@ -142,9 +126,7 @@ body.chapter-page {
   font-weight: 600;
   text-decoration: none;
 }
-.back-link:hover {
-  text-decoration: underline;
-}
+.back-link:hover { text-decoration: underline; }
 
 h1 {
   text-align: center;
@@ -158,7 +140,7 @@ h1 {
   text-align: center;
   font-style: italic;
   color: #6a635a;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.6rem;
 }
 
 .chapter-content {
@@ -169,18 +151,18 @@ h1 {
   hyphens: auto;
   max-width: 580px;
   margin: 0 auto;
-  white-space: normal;
+  white-space: normal;     /* ensure newlines collapse to spaces */
 }
 
-.chapter-content p {
-  margin: 0.85em 0;
+.chapter-content p {       /* consistent novel-like rhythm */
+  margin: 0.75em 0;
 }
 
-.chapter-content p + p {
+.chapter-content p + p {   /* paragraph indent after the first */
   text-indent: 1.5em;
 }
 
-/* Drop cap only on first page */
+/* Drop cap only on the first page of a chapter */
 .first-page .chapter-content p:first-of-type::first-letter {
   float: left;
   font-size: 3.5rem;
@@ -211,17 +193,12 @@ h1 {
   font-weight: 500;
   transition: background-color 0.2s ease;
 }
-.nav-button:hover {
-  background-color: #dfd4b8;
-}
+.nav-button:hover { background-color: #dfd4b8; }
 
 /* ===========================
-   GLOSSARY POPUPS
+   GLOSSARY POPUPS (right of term)
    =========================== */
-.glossary-wrap {
-  position: relative;
-  display: inline-block;
-}
+.glossary-wrap { position: relative; display: inline-block; }
 
 .glossary-term {
   color: #27496d;
@@ -237,10 +214,7 @@ h1 {
   line-height: inherit;
 }
 
-.glossary-term:focus {
-  outline: 2px solid #a0c4ff;
-  outline-offset: 1px;
-}
+.glossary-term:focus { outline: 2px solid #a0c4ff; outline-offset: 1px; }
 
 .glossary-definition {
   position: absolute;
@@ -264,44 +238,24 @@ h1 {
   text-align: left;
 }
 
-.glossary-definition-text {
-  display: block;
-  user-select: text;
-}
+.glossary-definition-text { display: block; user-select: text; }
+.glossary-image { display: block; width: 100%; max-width: 200px; margin-top: 8px; border-radius: 4px; }
 
 .glossary-wrap:hover .glossary-definition,
 .glossary-wrap.pin .glossary-definition,
 .glossary-term:focus + .glossary-definition {
-  visibility: visible;
-  opacity: 1;
+  visibility: visible; opacity: 1;
 }
 
 .glossary-wrap:hover .glossary-term,
 .glossary-wrap.pin .glossary-term {
-  background-color: #e6f0ff;
-  color: #1e3752;
-  border-bottom-color: #27496d;
+  background-color: #e6f0ff; color: #1e3752; border-bottom-color: #27496d;
 }
 
-/* ===========================
-   RESPONSIVE
-   =========================== */
+/* Mobile: place bubble under the word for space */
 @media (max-width: 900px) {
-  .index-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-  }
-  .book-card,
-  .contents-card {
-    max-width: 90%;
-  }
-
   .glossary-definition {
-    left: 0;
-    top: 100%;
-    margin-left: 0;
-    margin-top: 8px;
-    width: 90vw;
+    left: 0; top: 100%;
+    margin-left: 0; margin-top: 8px; width: 90vw;
   }
 }
