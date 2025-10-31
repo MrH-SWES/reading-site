@@ -17,25 +17,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
   function makeParagraphHTML(rawText) {
-  const norm = rawText.replace(/\r/g, "");
+    const norm = rawText.replace(/\r/g, "");
 
-  const parts = norm
-    // Split paragraphs cleanly on blank lines or newline followed by capital/quote
-    .split(/(?:\n{2,})|\n(?=\s*[A-Z“"'])/g)
-    .map(s =>
-      s
-        .replace(/\s+([,.!?;:])/g, "$1") // remove spaces before punctuation
-        .replace(/\s+/g, " ") // collapse extra spaces inside paragraph
-        .trim()
-    )
-    .filter(Boolean);
+    const parts = norm
+      .split(/(?:\n{2,})|\n(?=\s*[A-Z""'])/g)
+      .map(s =>
+        s
+          .replace(/\s+([,.!?;:])/g, "$1")
+          .replace(/\s+/g, " ")
+          .trim()
+      )
+      .filter(Boolean);
 
-  // Each paragraph wrapped in <p>, separated with a blank line for readability
-  return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n\n");
-}
-
-
-
+    return parts.map(p => `<p>${renderGlossaryInline(p)}</p>`).join("\n\n");
+  }
 
   function renderGlossaryInline(text) {
     if (!glossary || !Object.keys(glossary).length) return text;
@@ -111,12 +106,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   Promise.all([
-    fetch("glossary.json").then((r) => (r.ok ? r.json() : {})),
-    fetch("chapters/manifest.json").then((r) => (r.ok ? r.json() : [])),
-    fetch(`chapters/${chapterFile}`).then((r) => {
-      if (!r.ok) throw new Error(`Failed to load chapter file: ${chapterFile}`);
-      return r.text();
-    }),
+    fetch("glossary.json")
+      .then((r) => {
+        if (!r.ok) {
+          console.warn("glossary.json not found or failed to load");
+          return {};
+        }
+        return r.json().catch(err => {
+          console.error("Error parsing glossary.json:", err);
+          return {};
+        });
+      }),
+    fetch("chapters/manifest.json")
+      .then((r) => {
+        if (!r.ok) {
+          console.error("manifest.json not found or failed to load");
+          return [];
+        }
+        return r.json().catch(err => {
+          console.error("Error parsing manifest.json:", err);
+          return [];
+        });
+      }),
+    fetch(`chapters/${chapterFile}`)
+      .then((r) => {
+        if (!r.ok) throw new Error(`Failed to load chapter file: ${chapterFile}`);
+        return r.text();
+      }),
   ])
     .then(([glossaryData, manifestData, chapterText]) => {
       glossary = glossaryData || {};
@@ -124,8 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const chapterInfo = Array.isArray(manifestData)
         ? manifestData.find((ch) => ch.file === chapterFile)
         : null;
-      if (chapterInfo && chapterTitleEl)
+      if (chapterInfo && chapterTitleEl) {
         chapterTitleEl.textContent = chapterInfo.title || "Chapter";
+      }
 
       const pageRegex = /\[startPage=(\d+)\]([\s\S]*?)\[endPage=\1\]/g;
       let m;
@@ -165,6 +182,3 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 });
-
-
-
