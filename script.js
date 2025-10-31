@@ -19,10 +19,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function paragraphsFrom(text) {
-    const parts = text.trim().split(/\n{2,}|\r?\n(?=[A-Z“"'])/g)
-      .map(s => s.trim()).filter(Boolean);
-    return parts.map(p => `<p>${p}</p>`).join("\n");
-  }
+  return text
+    .replace(/\s+/g, ' ')          // collapse multiple spaces/newlines
+    .trim()
+    .split(/(?<=\.)\s{2,}/g)      // split on sentence breaks with extra spacing (for page text)
+    .map(p => `<p>${p.trim()}</p>`)
+    .join("\n");
+}
 
   function renderGlossary(text) {
     if (!glossary || !Object.keys(glossary).length)
@@ -153,3 +156,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (chapterTitleEl) chapterTitleEl.textContent = "Error";
   });
 });
+
