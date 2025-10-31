@@ -30,24 +30,42 @@
   </main>
 
   <script>
+    const list = document.getElementById("contents-list");
+
+    // Start with static preface items
+    const staticItems = [
+      { title: "Foreword", file: "foreword.html" },
+      { title: "Map", file: "map.html" },
+    ];
+
+    // Render static items first
+    list.innerHTML = "";
+    staticItems.forEach(item => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = item.file;
+      a.textContent = item.title;
+      a.className = "contents-link";
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+
+    // Then load chapters from manifest
     fetch("chapters/manifest.json")
       .then(res => res.json())
       .then(chapters => {
-        const list = document.getElementById("contents-list");
-        list.innerHTML = "";
         chapters.forEach((ch, i) => {
           const li = document.createElement("li");
           const a = document.createElement("a");
           a.href = `chapter.html?chapter=${ch.file}`;
-          a.textContent = `${ch.title}`;
+          a.textContent = `Chapter ${i + 1}: ${ch.title}`;
           a.className = "contents-link";
           li.appendChild(a);
           list.appendChild(li);
         });
       })
       .catch(err => {
-        document.getElementById("contents-list").innerHTML =
-          `<li class="error">Error loading chapters: ${err.message}</li>`;
+        list.innerHTML += `<li class="error">Error loading chapters: ${err.message}</li>`;
       });
   </script>
 </body>
