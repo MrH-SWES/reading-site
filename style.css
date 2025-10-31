@@ -228,9 +228,9 @@ h1 {
 /* Glossary definition popup - positioned in the LEFT MARGIN */
 .glossary-definition {
   position: absolute;
-  right: 100%; /* Position to the left of the word */
+  right: 100%;
   top: 0;
-  margin-right: 10px; /* Small gap from the text */
+  margin-right: 10px;
   z-index: 30;
   visibility: hidden;
   opacity: 0;
@@ -246,20 +246,33 @@ h1 {
   line-height: 1.45;
   text-align: left;
   transition: opacity 120ms ease;
+  isolation: isolate;
 }
 
-/* Show definition when active */
-.glossary-wrap:hover .glossary-definition,
-.glossary-wrap.pin .glossary-definition,
-.glossary-term:focus + .glossary-definition {
+/* When definition is shown by clicking (pinned) */
+.glossary-wrap.pin .glossary-definition {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
 
+/* When definition is shown by hovering */
+.glossary-wrap:hover .glossary-definition {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+}
+
 .glossary-definition-text {
   display: block;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Only allow selection when pinned */
+.glossary-wrap.pin .glossary-definition-text {
   user-select: text;
+  -webkit-user-select: text;
 }
 
 .glossary-image {
