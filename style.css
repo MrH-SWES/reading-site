@@ -148,10 +148,10 @@ h1 {
   max-width: 720px;
   margin: 0 auto;
   color: #2a2722;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   line-height: 2;
   text-align: justify;
-  hyphens: auto;
+  hyphens: none;
 }
 
 .chapter-content p {
@@ -293,6 +293,7 @@ h1 {
     width: 90vw;
   }
 }
+
 
 
 
