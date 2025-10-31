@@ -234,17 +234,21 @@ h1 {
   position: fixed;
   top: 0;
   left: 0;
-  width: 0;
-  height: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 9999;
+  overflow: visible;
+}
+
+#glossary-popup-container * {
+  pointer-events: auto;
 }
 
 /* =============== GLOSSARY POPUP =============== */
 .glossary-popup {
   position: fixed;
   width: 300px;
-  pointer-events: auto;
   z-index: 10000;
   animation: fadeIn 0.15s ease;
 }
@@ -324,5 +328,6 @@ h1 {
     max-width: 350px;
   }
 }
+
 
 
