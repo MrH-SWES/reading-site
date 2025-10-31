@@ -99,7 +99,7 @@
     "definition": "a specific place set aside for Native American people to live"
   },
   "Suquamish": {
-    "definition": "the language and name of a specific Native American tribe"
+    "definition": "a Native American tribe from the Pacific Northwest"
   },
   "agent": {
     "definition": "a government official who managed a reservation"
@@ -129,10 +129,121 @@
   "steamer": {
     "definition": "a boat powered by steam engines (historical transportation)"
   },
-  "Boston": {
+  "paested": {
     "definition": "a term used by Native Americans to refer to white Americans from the eastern United States"
   },
   "lumber camp": {
     "definition": "a place where men lived while cutting down trees for wood"
+  },
+  "paddled": {
+    "definition": "moved a boat through water using a paddle"
+  },
+  "evenly": {
+    "definition": "in a smooth and steady way"
+  },
+  "surely": {
+    "definition": "in a confident and certain way"
+  },
+  "regular": {
+    "definition": "happening often in the same way"
+  },
+  "chores": {
+    "definition": "small jobs that need to be done around the house"
+  },
+  "wrinkled": {
+    "definition": "having lines and folds in the skin"
+  },
+  "comforted": {
+    "definition": "made someone feel better when they were sad or worried"
+  },
+  "arrangements": {
+    "definition": "plans made ahead of time"
+  },
+  "reservation": {
+    "definition": "land set aside by the government for Native American tribes"
+  },
+  "underbrush": {
+    "definition": "small plants and bushes growing under large trees"
+  },
+  "scarlet": {
+    "definition": "a bright red color"
+  },
+  "carved": {
+    "definition": "cut or shaped from something larger"
+  },
+  "bluff": {
+    "definition": "a high, steep cliff"
+  },
+  "meadow": {
+    "definition": "a field of grass"
+  },
+  "materials": {
+    "definition": "items used to make something"
+  },
+  "sturdy": {
+    "definition": "strong and well-built"
+  },
+  "tideline": {
+    "definition": "the place on a beach where the water reaches at high tide"
+  },
+  "trimmed": {
+    "definition": "cut to make neat or the right size"
+  },
+  "crosspieces": {
+    "definition": "pieces that go across other pieces"
+  },
+  "shelter": {
+    "definition": "a place that protects from weather"
+  },
+  "mattress": {
+    "definition": "a soft pad for sleeping on"
+  },
+  "innards": {
+    "definition": "the inside parts of an animal"
+  },
+  "tended": {
+    "definition": "took care of something"
+  },
+  "wriggling": {
+    "definition": "twisting and turning"
+  },
+  "tender": {
+    "definition": "soft and easy to chew"
+  },
+  "crumbly": {
+    "definition": "breaking apart easily into small pieces"
+  },
+  "angered": {
+    "definition": "made very mad"
+  },
+  "snatched": {
+    "definition": "grabbed quickly"
+  },
+  "canoe": {
+    "definition": "a narrow boat moved with a paddle"
+  },
+  "fishing camp": {
+    "definition": "a temporary place where people stay to catch fish"
+  },
+  "coho salmon": {
+    "definition": "a type of fish that lives in the Pacific Ocean"
+  },
+  "cattail mats": {
+    "definition": "woven coverings made from tall water plants"
+  },
+  "hatchet": {
+    "definition": "a small ax used for cutting wood"
+  },
+  "cedar": {
+    "definition": "a type of evergreen tree with reddish wood"
+  },
+  "fish trap": {
+    "definition": "a device used to catch fish"
+  },
+  "Twana": {
+    "definition": "a Native American tribe from Washington State"
+  },
+  "cash register": {
+    "definition": "a machine in a store that holds money and records sales"
   }
 }
