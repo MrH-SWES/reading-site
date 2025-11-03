@@ -100,7 +100,6 @@ function enhanceGlossary() {
     wrap.classList.add('glossary-term');
     wrap.setAttribute('role', 'button');
     wrap.setAttribute('tabindex', '0');
-    wrap.setAttribute('aria-label', `${termText}, click for definition`);
 
     const showPopup = (e) => {
       e.stopPropagation();
@@ -119,7 +118,7 @@ function enhanceGlossary() {
       popup.setAttribute('aria-label', `Definition of ${termText}`);
       popup.innerHTML = `
         <div class="glossary-popup-content">
-          <button class="glossary-popup-close" aria-label="Close definition">×</button>
+          <button class="glossary-popup-close" aria-label="Close definition">Close</button>
           <div class="glossary-popup-text">${defText}</div>
           ${imgHtml}
         </div>
@@ -132,14 +131,16 @@ function enhanceGlossary() {
       // Calculate position after it's in the DOM
       const termRect = wrap.getBoundingClientRect();
       const popupRect = popup.getBoundingClientRect();
+      const mainContainer = document.querySelector('.chapter-container');
+      const mainRect = mainContainer.getBoundingClientRect();
       
-      // Position on the left side of the term
-      let left = termRect.left - popupRect.width - 15;
+      // Always position on the left side of the main text container
+      let left = mainRect.left - popupRect.width - 20;
       let top = termRect.top + window.scrollY;
       
-      // If too close to left edge, position on the right instead
+      // If there's not enough room on the left, position on the right instead
       if (left < 10) {
-        left = termRect.right + 15;
+        left = mainRect.right + 20;
         popup.classList.add('right-side');
       }
       
@@ -149,14 +150,14 @@ function enhanceGlossary() {
       }
       
       // Make sure it doesn't go off the bottom
-      const maxTop = window.innerHeight - popupRect.height - 10;
+      const maxTop = window.innerHeight + window.scrollY - popupRect.height - 10;
       if (top > maxTop) {
         top = maxTop;
       }
 
-      popup.style.position = 'fixed';
+      popup.style.position = 'absolute';
       popup.style.left = `${left}px`;
-      popup.style.top = `${termRect.top}px`;
+      popup.style.top = `${top}px`;
       popup.style.visibility = 'visible';
 
       activePopup = popup;
@@ -315,7 +316,3 @@ function enhanceGlossary() {
       console.error(err);
     });
 });
-
-
-
-
