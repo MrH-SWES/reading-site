@@ -118,7 +118,7 @@ function enhanceGlossary() {
       popup.setAttribute('aria-label', `Definition of ${termText}`);
       popup.innerHTML = `
         <div class="glossary-popup-content">
-          <button class="glossary-popup-close" aria-label="Close definition"><span aria-hidden="true">×</span></button>
+          <button class="glossary-popup-close" aria-hidden="true" tabindex="-1">×</button>
           <div class="glossary-popup-text">${defText}</div>
           ${imgHtml}
         </div>
