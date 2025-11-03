@@ -78,6 +78,8 @@ function enhanceGlossary() {
     console.error('Popup container not found!');
     return;
   }
+  
+  console.log('Glossary loaded with', Object.keys(glossary).length, 'terms');
 
   let activePopup = null;
   let activeTerm = null;
@@ -88,14 +90,22 @@ function enhanceGlossary() {
     
     if (!termKey) return;
 
-    // Find the glossary entry (case-insensitive)
-    const glossaryKey = Object.keys(glossary).find(key => key.toLowerCase() === termKey.toLowerCase());
-    if (!glossaryKey || !glossary[glossaryKey]) return;
+    // Find the glossary entry - try exact match first, then case-insensitive
+    let data = glossary[termKey];
+    
+    if (!data) {
+      // Try case-insensitive search
+      const glossaryKey = Object.keys(glossary).find(key => key.toLowerCase() === termKey.toLowerCase());
+      if (glossaryKey) {
+        data = glossary[glossaryKey];
+      }
+    }
+    
+    if (!data) return;
 
-    const data = glossary[glossaryKey];
     const defText = typeof data === "object" ? data.definition : String(data);
     const imgHtml = typeof data === "object" && data.image
-      ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
+      ? `<img src="${data.image}" alt="${termText}" class="glossary-image" role="presentation">`
       : "";
 
     // Make the term visually styled and clickable
