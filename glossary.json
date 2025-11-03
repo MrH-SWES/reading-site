@@ -96,10 +96,12 @@
     "definition": "a serious contagious disease that was common long ago"
   },
   "Port Madison Reservation": {
-    "definition": "a specific place set aside for Native American people to live"
+    "definition": "a specific place set aside for Native American people to live",
+    "image": "assets/port-madison-map.jpg"
   },
   "Suquamish": {
-    "definition": "a Native American tribe from the Pacific Northwest"
+    "definition": "a Native American tribe from the Pacific Northwest",
+    "image": "assets/suqua-cover.jpg"
   },
   "agent": {
     "definition": "a government official who managed a reservation"
@@ -117,17 +119,20 @@
     "definition": "refers to a specific Native American group"
   },
   "cradleboard": {
-    "definition": "a traditional Native American baby carrier made of wood and cloth"
+    "definition": "a traditional Native American baby carrier made of wood and cloth",
+    "image": "assets/cradleboard.jpg"
   },
   "cattail mat": {
     "definition": "a woven mat made from cattail plants, used by Native peoples",
-    "image": "https://i.ytimg.com/vi/B8uF8F6hE-4/maxresdefault.jpg"
+    "image": "assets/cattails.jpg"
   },
   "Puget Sound": {
-    "definition": "a large body of water in Washington State"
+    "definition": "a large body of water in Washington State",
+    "image": "assets/puget-sound.jpg"
   },
   "steamer": {
-    "definition": "a boat powered by steam engines (historical transportation)"
+    "definition": "a boat powered by steam engines (historical transportation)",
+    "image": "assets/steamer.jpg"
   },
   "paested": {
     "definition": "a term used by Native Americans to refer to white Americans from the eastern United States"
@@ -172,7 +177,8 @@
     "definition": "cut or shaped from something larger"
   },
   "bluff": {
-    "definition": "a high, steep cliff"
+    "definition": "a high, steep cliff",
+    "image": "assets/bluff.jpg"
   },
   "meadow": {
     "definition": "a field of grass"
@@ -220,25 +226,30 @@
     "definition": "grabbed quickly"
   },
   "canoe": {
-    "definition": "a narrow boat moved with a paddle"
+    "definition": "a narrow boat moved with a paddle",
+    "image": "assets/canoe.jpg"
   },
   "fishing camp": {
     "definition": "a temporary place where people stay to catch fish"
   },
   "coho salmon": {
-    "definition": "a type of fish that lives in the Pacific Ocean"
+    "definition": "a type of fish that lives in the Pacific Ocean",
+    "image": "assets/coho-salmon.jpg"
   },
   "cattail mats": {
     "definition": "woven coverings made from tall water plants"
   },
   "hatchet": {
-    "definition": "a small ax used for cutting wood"
+    "definition": "a small ax used for cutting wood",
+    "image": "assets/hatchet.jpg"
   },
   "cedar": {
-    "definition": "a type of evergreen tree with reddish wood"
+    "definition": "a type of evergreen tree with reddish wood",
+    "image": "assets/cedar.jpg"
   },
   "fish trap": {
-    "definition": "a device made of sticks to catch fish"
+    "definition": "a device made of sticks to catch fish",
+    "image": "assets/fish-trap.jpg"
   },
   "Twana": {
     "definition": "a Native American tribe from Washington State"
@@ -358,25 +369,30 @@
     "definition": "a bag made from the cloth used to hold flour"
   },
   "drying rack": {
-    "definition": "a frame to hang fish on so they dry in the sun"
+    "definition": "a frame to hang fish on so they dry in the sun",
+    "image": "assets/drying-rack.jpg"
   },
   "cedar bough": {
-    "definition": "a branch from a cedar tree"
+    "definition": "a branch from a cedar tree",
+    "image": "assets/cedar-bough.jpg"
   },
   "inlet": {
     "definition": "a narrow strip of water that goes into the land from a larger body of water"
   },
   "marsh": {
-    "definition": "wet, soft land where water plants grow"
+    "definition": "wet, soft land where water plants grow",
+    "image": "assets/marsh.jpg"
   },
   "cattails": {
-    "definition": "tall plants with long leaves that grow in wet areas"
+    "definition": "tall plants with long leaves that grow in wet areas",
+    "image": "assets/cattails.jpg"
   },
   "cattail roots": {
     "definition": "the underground parts of cattail plants that can be eaten"
   },
   "basketwork": {
-    "definition": "items woven from plant materials"
+    "definition": "items woven from plant materials",
+    "image": "assets/basketwork.jpg"
   },
   "matting": {
     "definition": "woven material used for covering floors or walls"
@@ -397,9 +413,11 @@
     "definition": "land set aside for the Twana people in Washington State"
   },
   "Old Man House": {
-    "definition": "a large traditional longhouse where many families lived together"
+    "definition": "a large traditional longhouse where many families lived together",
+    "image": "assets/old-man-house.jpg"
   },
   "kerosene lamp": {
-    "definition": "a lamp that burns kerosene oil for light"
+    "definition": "a lamp that burns kerosene oil for light",
+    "image": "assets/kerosene-lamp.jpg"
   }
 }
