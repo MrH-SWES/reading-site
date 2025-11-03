@@ -38,29 +38,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const terms = Object.keys(glossary).sort((a, b) => b.length - a.length);
   let processed = text;
-  const usedTerms = new Set();
 
   for (const original of terms) {
     const data = glossary[original];
     if (!data) continue;
 
-    if (usedTerms.has(original.toLowerCase())) continue;
-
     const regex = new RegExp(`\\b(${escapeRegExp(original)})\\b`, "i");
 
-    const parts = processed.split(/(<span class="glossary-wrap">[\s\S]*?<\/span>)/);
+    // Split by existing glossary spans to avoid matching inside them
+    const parts = processed.split(/(<span class="glossary-wrap"[^>]*>[\s\S]*?<\/span>)/);
     
     let foundAndReplaced = false;
     const newParts = parts.map(part => {
-      if (part.startsWith('<span class="glossary-wrap">')) {
+      // Don't modify existing glossary spans
+      if (part.match(/<span class="glossary-wrap"/)) {
         return part;
       }
       
+      // Only replace the first occurrence in plain text
       if (!foundAndReplaced && regex.test(part)) {
         foundAndReplaced = true;
-        usedTerms.add(original.toLowerCase());
         return part.replace(regex, (match) => {
-          // Store the term in a data attribute for later popup creation
           return `<span class="glossary-wrap" data-term="${original.toLowerCase()}">${match}</span>`;
         });
       }
