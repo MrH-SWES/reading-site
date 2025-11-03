@@ -247,7 +247,7 @@ h1 {
 
 /* =============== GLOSSARY POPUP =============== */
 .glossary-popup {
-  position: fixed;
+  position: absolute;
   width: 300px;
   z-index: 10000;
   animation: fadeIn 0.15s ease;
@@ -277,23 +277,20 @@ h1 {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: none;
-  border: none;
-  font-size: 24px;
-  line-height: 1;
+  background: #f0e8d0;
+  border: 1px solid #cbb77c;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
   color: #6b5d4f;
-  width: 28px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 4px 10px;
   border-radius: 4px;
   transition: background 0.15s ease;
+  font-family: 'Lexend', sans-serif;
 }
 
 .glossary-popup-close:hover {
-  background: #f0e8d0;
+  background: #e6ddc0;
 }
 
 .glossary-popup-close:focus {
@@ -328,6 +325,3 @@ h1 {
     max-width: 350px;
   }
 }
-
-
-
