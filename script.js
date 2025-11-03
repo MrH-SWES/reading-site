@@ -86,9 +86,13 @@ function enhanceGlossary() {
     const termText = wrap.textContent;
     const termKey = wrap.getAttribute('data-term');
     
-    if (!termKey || !glossary[termKey]) return;
+    if (!termKey) return;
 
-    const data = glossary[termKey];
+    // Find the glossary entry (case-insensitive)
+    const glossaryKey = Object.keys(glossary).find(key => key.toLowerCase() === termKey.toLowerCase());
+    if (!glossaryKey || !glossary[glossaryKey]) return;
+
+    const data = glossary[glossaryKey];
     const defText = typeof data === "object" ? data.definition : String(data);
     const imgHtml = typeof data === "object" && data.image
       ? `<img src="${data.image}" alt="" class="glossary-image" role="presentation">`
