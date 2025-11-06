@@ -1,39 +1,9 @@
-{
-  "chapters": [
-    {
-      "number": 1,
-      "title": "Fishing Camp",
-      "file": "chapter1.txt"
-    },
-    {
-      "number": 2,
-      "title": "A Canoe Trip",
-      "file": "chapter2.txt"
-    },
-    {
-      "number": 3,
-      "title": "The Baseball Game",
-      "file": "chapter3.txt"
-    },
-    {
-      "number": 4,
-      "title": "Father's Visit",
-      "file": "chapter4.txt"
-    },
-    {
-      "number": 5,
-      "title": "Mr. Simpson Says",
-      "file": "chapter5.txt"
-    },
-    {
-      "number": 6,
-      "title": "Back to School",
-      "file": "chapter6.txt"
-    },
-    {
-      "number": 7,
-      "title": "Indian Court",
-      "file": "chapter7.txt"
-    }
-  ]
-}
+[
+  { "number": 1, "title": "Fishing Camp", "file": "chapter1.txt" },
+  { "number": 2, "title": "A Canoe Trip", "file": "chapter2.txt" },
+  { "number": 3, "title": "The Baseball Game", "file": "chapter3.txt" },
+  { "number": 4, "title": "Father's Visit", "file": "chapter4.txt" },
+  { "number": 5, "title": "Mr. Simpson Says", "file": "chapter5.txt" },
+  { "number": 6, "title": "Back to School", "file": "chapter6.txt" },
+  { "number": 7, "title": "Indian Court", "file": "chapter7.txt" }
+]
