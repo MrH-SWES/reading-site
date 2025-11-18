@@ -419,5 +419,122 @@
   "kerosene lamp": {
     "definition": "a lamp that burns kerosene oil for light",
     "image": "assets/kerosene-lamp.jpg"
+  },
+  "sorely": {
+    "definition": "very much; deeply"
+  },
+  "disappointed": {
+    "definition": "feeling sad because something you hoped for didn't happen"
+  },
+  "sentence": {
+    "definition": "the punishment a judge gives to someone who broke the law"
+  },
+  "allotment": {
+    "definition": "a piece of land given to a Native American family by the government"
+  },
+  "boardinghouse": {
+    "definition": "a house where people pay to live and eat meals"
+  },
+  "kettle": {
+    "definition": "a large pot for cooking"
+  },
+  "clam chowder": {
+    "definition": "a thick soup made with clams, potatoes, and milk or cream"
+  },
+  "biscuits": {
+    "definition": "small, soft bread rolls"
+  },
+  "prospect": {
+    "definition": "the idea or expectation of something happening"
+  },
+  "revitalize": {
+    "definition": "to give new energy to someone"
+  },
+  "clearing": {
+    "definition": "an open space in the woods where trees have been cut down"
+  },
+  "mischievous": {
+    "definition": "playful in a naughty or teasing way"
+  },
+  "genuine": {
+    "definition": "real; true"
+  },
+  "Sears-Roebuck catalog": {
+    "definition": "a famous mail-order catalog where people could buy almost anything",
+    "image": "assets/sears-catalog.jpg"
+  },
+  "features": {
+    "definition": "special parts or qualities of something"
+  },
+  "burners": {
+    "definition": "the parts of a stove where fire heats pots and pans"
+  },
+  "vaguely": {
+    "definition": "in an unclear or uncertain way"
+  },
+  "unsettled": {
+    "definition": "feeling worried or uncomfortable"
+  },
+  "upside-down": {
+    "definition": "turned so the top is on the bottom"
+  },
+  "matter-of-factly": {
+    "definition": "in a calm, practical way without showing emotion"
+  },
+  "pegs": {
+    "definition": "wooden hooks on a wall for hanging things"
+  },
+  "canned": {
+    "definition": "preserved in jars or cans"
+  },
+  "three-sided woodshed": {
+    "definition": "a simple shelter with three walls for storing wood"
+  },
+  "split": {
+    "definition": "to cut or break wood into smaller pieces"
+  },
+  "grinding wheel": {
+    "definition": "a round stone that spins to sharpen tools",
+    "image": "assets/grinding-wheel.jpg"
+  },
+  "press": {
+    "definition": "to push something firmly against something else"
+  },
+  "cutting edge": {
+    "definition": "the sharp part of a blade that cuts"
+  },
+  "blurted out": {
+    "definition": "said something suddenly without thinking"
+  },
+  "thoughtfully": {
+    "definition": "in a careful, serious way"
+  },
+  "blade": {
+    "definition": "the flat, sharp part of a knife or ax"
+  },
+  "operating": {
+    "definition": "using or running a machine"
+  },
+  "cranked": {
+    "definition": "turned a handle around and around"
+  },
+  "scraped": {
+    "definition": "rubbed roughly against something"
+  },
+  "straightened up": {
+    "definition": "stood up tall after bending down"
+  },
+  "orphaned": {
+    "definition": "without parents"
+  },
+  "wailing": {
+    "definition": "crying loudly in sadness"
+  },
+  "survive": {
+    "definition": "to continue living through difficult times"
+  },
+  "angle": {
+    "definition": "the direction or position something is pointed"
   }
+}
 }
